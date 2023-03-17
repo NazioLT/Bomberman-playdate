@@ -1,5 +1,7 @@
 GameScene = {}
-class("GameScene").extends(NobleScene)
+class('GameScene').extends(NobleScene)
+
+player = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 
@@ -9,24 +11,7 @@ end
 
 function GameScene:enter()
     GameScene.super.enter(self)
-end
 
-function GameScene:start()
-    GameScene.super.start(self)
-end
-
-function GameScene:drawBackground()
-    GameScene.super.drawBackground(self)
-end
-
-function GameScene:update()
-    GameScene.super.update(self)
-end
-
-function GameScene:exit()
-    GameScene.super.exit(self)
-end
-
-function GameScene:finish()
-    GameScene.super.finish(self)
+    -- player = Player()
+    player = Tile(1,1,1)
 end

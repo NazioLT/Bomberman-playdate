@@ -2,14 +2,16 @@ class('Tile').extends(AnimatedSprite)
 
 tileSheetImagetable = playdate.graphics.imagetable.new('images/env-table-16-16.png')
 
-function Tile:init(i, j, imageIndex)
+function Tile:fixImage(imageIndex)
+    local image = tileSheetImagetable:getImage(imageIndex)
+    self:setImage(image)
+end
+
+function Tile:init(i, j)
     Tile.super.init(self, tileSheetImagetable)
 
     self.i = i
     self.j = j
 
-    local image = tileSheetImagetable:getImage(imageIndex)
-    self:setImage(image)
-
-    self:moveTo(100,020)
+    self:moveTo(j * 16, i * 16)
 end

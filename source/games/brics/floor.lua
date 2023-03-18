@@ -7,5 +7,5 @@ end
 function Floor:init(i, j)
     Floor.super.init(self, i,j)
 
-    self:fixImage(2)
+    self:fixImage(44)
 end

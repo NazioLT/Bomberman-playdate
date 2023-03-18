@@ -9,5 +9,6 @@ import "games/scenes/gameScene.lua"
 import "games/player.lua"
 import "games/brics/tile.lua"
 import "games/brics/floor.lua"
+import "games/brics/unbreakableBlock.lua"
 
 Noble.new(SimpleScene)

@@ -22,7 +22,12 @@ function GameScene:enter()
         end
     end
 
-    self:addNewElement(Floor, 1, 1)
+    
+    for i = 1, 15, 1 do
+        for j = 1, 15, 1 do
+            self:addNewElement(Floor, i, j)
+        end
+    end
 end
 
 function GameScene:addNewElement(type, i, j, ...)

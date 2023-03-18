@@ -12,7 +12,7 @@ end
 function GameScene:enter()
     GameScene.super.enter(self)
 
-    -- Construct Map --
+    -- Init map data --
     self.tiles = {}
 
     for i = 1, 15, 1 do
@@ -22,7 +22,7 @@ function GameScene:enter()
         end
     end
 
-    
+    -- Generate base of the Map --
     for i = 1, 15, 1 do
         for j = 1, 15, 1 do
             if 
@@ -32,6 +32,17 @@ function GameScene:enter()
             or (j % 2 == 1 and i % 2 == 1)
             then
                 self:addNewElement(UnbreakableBlock, i, j)
+            end
+        end
+    end
+
+    local bricProbability = 0.9
+
+    for i = 2, 14, 1 do
+        for j = 2, 14, 1 do
+            if math.random() > (1 - bricProbability)
+            and (j % 2 == 1 and i % 2 == 1) == false then
+                self:addNewElement(Bric, i, j)
             end
         end
     end

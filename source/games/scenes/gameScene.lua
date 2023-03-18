@@ -22,7 +22,19 @@ function GameScene:enter()
         end
     end
 
-    -- Generate base of the Map --
+    self:spawnBorders()
+
+    self:spawnBrics()
+end
+
+function GameScene:addNewElement(type, i, j, ...)
+    local caseTable = self.tiles[i][j]
+    caseTable[#caseTable + 1] = type.new(i, j, ...)
+end
+
+-- Shortcuts methods --
+
+function GameScene:spawnBorders()
     for i = 1, 15, 1 do
         for j = 1, 15, 1 do
             if 
@@ -35,7 +47,9 @@ function GameScene:enter()
             end
         end
     end
+end
 
+function GameScene:spawnBrics()
     local bricProbability = 0.9
 
     for i = 2, 14, 1 do
@@ -46,9 +60,4 @@ function GameScene:enter()
             end
         end
     end
-end
-
-function GameScene:addNewElement(type, i, j, ...)
-    local caseTable = self.tiles[i][j]
-    caseTable[#caseTable + 1] = type.new(i, j, ...)
 end

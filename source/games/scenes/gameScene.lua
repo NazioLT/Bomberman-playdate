@@ -22,8 +22,9 @@ function GameScene:enter()
         end
     end
 
-    self:spawnBorders()
+    math.randomseed(playdate.getSecondsSinceEpoch())
 
+    self:spawnBorders()
     self:spawnBrics()
 end
 

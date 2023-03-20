@@ -74,10 +74,12 @@ function GameScene:spawnBorders()
             if
             -- Borders
                 i == 1 or i == 15 or j == 1 or j == 15
-                -- Tiles une fois sur 2
-                or (j % 2 == 1 and i % 2 == 1)
             then
-                self:addNewElement(UnbreakableBlock, i, j)
+                self:addNewElement(UnbreakableBlock, i, j, false)
+
+                -- Tiles une fois sur 2
+            elseif (j % 2 == 1 and i % 2 == 1) then
+                self:addNewElement(UnbreakableBlock, i, j, true)
             end
         end
     end

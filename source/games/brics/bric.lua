@@ -5,7 +5,7 @@ function Bric.new(i, j)
 end
 
 function Bric:init(i, j)
-    Bric.super.init(self, i, j)
+    Bric.super.init(self, i, j, true)
 
     self:fixImage(44)
 end

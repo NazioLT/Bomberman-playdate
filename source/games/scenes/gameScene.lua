@@ -1,12 +1,27 @@
 GameScene = {}
 class('GameScene').extends(NobleScene)
 
-player = nil
+player1 = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 
 function GameScene:init()
     GameScene.super.init(self)
+
+    GameScene.inputHandler = {
+        upButtonHold = function()
+            player1:Move(playdate.geometry.vector2D.new(player1.velocity.x, -1))
+        end,
+        downButtonHold = function()
+            player1:Move(playdate.geometry.vector2D.new(player1.velocity.x, 1))
+        end,
+        leftButtonHold = function()
+            player1:Move(playdate.geometry.vector2D.new(-1, player1.velocity.y))
+        end,
+        rightButtonHold = function()
+            player1:Move(playdate.geometry.vector2D.new(1, player1.velocity.y))
+        end
+    }
 end
 
 function GameScene:enter()
@@ -38,6 +53,9 @@ function GameScene:enter()
     self:spawnBrics()
 
     self:setFloors()
+
+    -- Add Player
+    player1 = Player(2, 2, P0)
 end
 
 function GameScene:addNewElement(type, i, j, ...)

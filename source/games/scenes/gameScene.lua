@@ -27,7 +27,6 @@ function GameScene:enter()
 
     self:spawnBorders()
 
-
     self:addNewElement(Empty, 2, 2)
     self:addNewElement(Empty, 3, 2)
     self:addNewElement(Empty, 2, 3)
@@ -37,11 +36,16 @@ function GameScene:enter()
     self:addNewElement(Empty, 14, 13)
 
     self:spawnBrics()
+
+    self:setFloors()
 end
 
 function GameScene:addNewElement(type, i, j, ...)
     local caseTable = self.tiles[i][j]
-    caseTable[#caseTable + 1] = type.new(i, j, ...)
+    local object = type.new(i, j, ...)
+    caseTable[#caseTable + 1] = object
+
+    return object
 end
 
 -- Shortcuts methods --
@@ -62,7 +66,7 @@ function GameScene:spawnBorders()
 end
 
 function GameScene:spawnBrics()
-    local bricProbability = 0.9
+    local bricProbability = 0.6
 
     for i = 2, 14, 1 do
         for j = 2, 14, 1 do
@@ -73,6 +77,24 @@ function GameScene:spawnBrics()
                 and hasTypeInTable(table, Empty) == false
             then
                 self:addNewElement(Bric, i, j)
+            end
+        end
+    end
+end
+
+function GameScene:setFloors()
+    for i = 2, 14, 1 do
+        for j = 2, 14, 1 do
+            local caseTable = self.tiles[i][j]
+
+            if hasTypeInTable(caseTable, Block) == false then
+                local upTable = self.tiles[i][j - 1]
+                local floor = self:addNewElement(Floor, i, j)
+
+                if hasTypeInTable(upTable, Block)
+                then
+                    floor:setShadow(true)
+                end
             end
         end
     end

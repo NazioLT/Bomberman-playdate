@@ -16,5 +16,6 @@ import "games/brics/block.lua"
 import "games/brics/unbreakableBlock.lua"
 import "games/brics/bric.lua"
 import "games/brics/empty.lua"
+import "games/brics/floor.lua"
 
 Noble.new(SimpleScene)

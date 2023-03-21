@@ -28,14 +28,37 @@ function Player:init(i, j, player)
     self:addState('IdleBot', 19 + playerShift, 19 + playerShift, {
         tickStep = tickSpeed
     }).asDefault()
+    self:addState('RunBot', 1, 3, {
+        tickStep = tickSpeed,
+        yoyo = true,
+        frames = { 20 + playerShift, 19 + playerShift, 21 + playerShift }
+    })
+
     self:addState('IdleTop', 1 + playerShift, 1 + playerShift, {
         tickStep = tickSpeed
     })
+    self:addState('RunTop', 1, 3, {
+        tickStep = tickSpeed,
+        yoyo = true,
+        frames = { 2 + playerShift, 1 + playerShift, 3 + playerShift }
+    })
+
     self:addState('IdleRight', 10 + playerShift, 10 + playerShift, {
         tickStep = tickSpeed
     })
+    self:addState('RunRight', 1, 3, {
+        tickStep = tickSpeed,
+        yoyo = true,
+        frames = { 11 + playerShift, 10 + playerShift, 12 + playerShift }
+    })
+
     self:addState('IdleLeft', 28 + playerShift, 28 + playerShift, {
         tickStep = tickSpeed
+    })
+    self:addState('RunLeft', 1, 3, {
+        tickStep = tickSpeed,
+        yoyo = true,
+        frames = { 29 + playerShift, 28 + playerShift, 30 + playerShift }
     })
 
     self:playAnimation()
@@ -58,18 +81,18 @@ function Player:update()
     self:moveWithCollisions(self.x + velocity.x, self.y + velocity.y)
 
     if velocity.y > 0 then
-        self:changeState('IdleBot', true)
+        self:changeState('RunBot', true)
         self.lastDirection = "Bot"
     elseif velocity.y < 0 then
-        self:changeState('IdleTop', true)
+        self:changeState('RunTop', true)
         self.lastDirection = "Top"
     elseif velocity.x < 0 then
-        self:changeState('IdleLeft', true)
+        self:changeState('RunLeft', true)
         self.lastDirection = "Left"
     elseif velocity.x > 0 then
-        self:changeState('IdleRight', true)
+        self:changeState('RunRight', true)
         self.lastDirection = "Right"
-    else 
+    else
         self:changeState('Idle' .. self.lastDirection, true)
     end
 

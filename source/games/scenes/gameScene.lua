@@ -1,12 +1,27 @@
 GameScene = {}
 class('GameScene').extends(NobleScene)
 
-player = nil
+player1 = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 
 function GameScene:init()
     GameScene.super.init(self)
+
+    GameScene.inputHandler = {
+        upButtonHold = function()
+            player1:setDirection(player1.moveInputs.x, -1)
+        end,
+        downButtonHold = function()
+            player1:setDirection(player1.moveInputs.x, 1)
+        end,
+        leftButtonHold = function()
+            player1:setDirection(-1, player1.moveInputs.y)
+        end,
+        rightButtonHold = function()
+            player1:setDirection(1, player1.moveInputs.y)
+        end
+    }
 end
 
 function GameScene:enter()
@@ -38,6 +53,9 @@ function GameScene:enter()
     self:spawnBrics()
 
     self:setFloors()
+
+    -- Add Player
+    player1 = Player(2, 2, P0)
 end
 
 function GameScene:addNewElement(type, i, j, ...)
@@ -56,10 +74,12 @@ function GameScene:spawnBorders()
             if
             -- Borders
                 i == 1 or i == 15 or j == 1 or j == 15
-                -- Tiles une fois sur 2
-                or (j % 2 == 1 and i % 2 == 1)
             then
-                self:addNewElement(UnbreakableBlock, i, j)
+                self:addNewElement(UnbreakableBlock, i, j, false)
+
+                -- Tiles une fois sur 2
+            elseif (j % 2 == 1 and i % 2 == 1) then
+                self:addNewElement(UnbreakableBlock, i, j, true)
             end
         end
     end

@@ -4,6 +4,7 @@ tileSheetImagetable = playdate.graphics.imagetable.new('images/env-table-16-16.p
 
 collisionGroup = {
     block = 5,
+    shiftBlock = 6,
 }
 
 function tileToPixel(i, j)

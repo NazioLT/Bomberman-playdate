@@ -10,16 +10,16 @@ function GameScene:init()
 
     GameScene.inputHandler = {
         upButtonHold = function()
-            player1:Move(playdate.geometry.vector2D.new(player1.velocity.x, -1))
+            player1:setDirection(player1.moveInputs.x, -1)
         end,
         downButtonHold = function()
-            player1:Move(playdate.geometry.vector2D.new(player1.velocity.x, 1))
+            player1:setDirection(player1.moveInputs.x, 1)
         end,
         leftButtonHold = function()
-            player1:Move(playdate.geometry.vector2D.new(-1, player1.velocity.y))
+            player1:setDirection(-1, player1.moveInputs.y)
         end,
         rightButtonHold = function()
-            player1:Move(playdate.geometry.vector2D.new(1, player1.velocity.y))
+            player1:setDirection(1, player1.moveInputs.y)
         end
     }
 end

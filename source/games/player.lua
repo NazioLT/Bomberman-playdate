@@ -100,6 +100,6 @@ function Player:update()
 end
 
 function Player:dropBomb()
-    local i, j = pixelToTile(self.x, self.y)
+    local i, j = pixelToTile(self.x, self.y + 8)
     Bomb.new(i, j)
 end

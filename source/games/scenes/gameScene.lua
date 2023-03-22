@@ -20,6 +20,9 @@ function GameScene:init()
         end,
         rightButtonHold = function()
             player1:setDirection(1, player1.moveInputs.y)
+        end, 
+        AButtonDown = function ()
+            player1:dropBomb()
         end
     }
 end

@@ -11,6 +11,10 @@ function tileToPixel(i, j)
     return (i + 5) * 16 - 8, j * 16 - 8
 end
 
+function pixelToTile(x, y)
+    return math.floor((x - 8 - 16 * 5) / 16 + 1 + 0.5), math.floor((y - 8) / 16 + 1 + 0.5)
+end
+
 function GameObject:fixImage(imageIndex)
     local image = tileSheetImagetable:getImage(imageIndex)
     self:setImage(image)

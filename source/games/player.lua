@@ -17,7 +17,7 @@ function Player:init(i, j, player)
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
     self.lastDirection = "Bot"
 
-    local playerShift = playerNumber == P1 and 0 or 5
+    local playerShift = player == P1 and 0 or 5
     local tickSpeed = 10
 
     -- Colliders
@@ -97,4 +97,9 @@ function Player:update()
     end
 
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
+end
+
+function Player:dropBomb()
+    local i, j = pixelToTile(self.x, self.y)
+    Bomb.new(i, j)
 end

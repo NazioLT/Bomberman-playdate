@@ -10,14 +10,14 @@ function Player:init(i, j, player)
     -- variables
     self.bombs = {}
     self.speed = 3
-    self.nbBombMax = 1
+    self.nbBombMax = 2
     self.dead = false
 
     self.velocity = playdate.geometry.vector2D.new(0, 0)
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
     self.lastDirection = "Bot"
 
-    local playerShift = player == P1 and 0 or 5
+    local playerShift = player == P0 and 0 or 5
     local tickSpeed = 10
 
     -- Colliders
@@ -101,6 +101,20 @@ function Player:update()
 end
 
 function Player:dropBomb()
+    if self.nbBombMax <= #self.bombs then
+        return
+    end
+
+    -- on commence par tester si il y à déjà une bombe déposer
+    local sprites = playdate.graphics.sprite.querySpritesAtPoint(self.x, self.y + 8)
+    if sprites ~= nil then
+        for i = 1, #sprites, 1 do
+            if sprites[i]:isa(Bomb) then
+                return
+            end
+        end
+    end 
+
     local i, j = pixelToTile(self.x, self.y + 8)
-    Bomb.new(i, j)
+    self.bombs[#self.bombs + 1] = Bomb.new(i, j)
 end

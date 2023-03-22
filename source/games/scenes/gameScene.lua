@@ -1,7 +1,8 @@
-GameScene = {}
+gameScene = {}
 class('GameScene').extends(NobleScene)
 
 player1 = nil
+player2 = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 

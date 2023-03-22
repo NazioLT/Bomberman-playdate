@@ -105,7 +105,7 @@ function Player:dropBomb()
         return
     end
 
-    -- on commence par tester si il y à déjà une bombe déposer
+    -- Si déja une bombe sur la tile, return
     local sprites = playdate.graphics.sprite.querySpritesAtPoint(self.x, self.y + 8)
     if sprites ~= nil then
         for i = 1, #sprites, 1 do
@@ -113,7 +113,7 @@ function Player:dropBomb()
                 return
             end
         end
-    end 
+    end
 
     local i, j = pixelToTile(self.x, self.y + 8)
     self.bombs[#self.bombs + 1] = Bomb.new(i, j)

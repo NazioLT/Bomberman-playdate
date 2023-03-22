@@ -26,8 +26,25 @@ function Bomb:init(i, j)
 
     self:playAnimation()
 
-    self.states.BombFast.onAnimationEndEvent = function (self)
+    self.states.BombFast.onAnimationEndEvent = function(self)
         self:explode()
+    end
+
+    local sprites = playdate.graphics.sprite.querySpritesAtPoint(self.x, self.y + 8)
+    local collideP1, collideP2 = false, false
+
+    if player1 ~= nil then
+        local pi, pj = pixelToTile(player1.x, player1.y)
+        if pi == i and pj == j then
+            collideP1 = true
+        end
+    end
+
+    if player2 ~= nil then
+        local pi, pj = pixelToTile(player2.x, player2.y)
+        if pi == i and pj == j then
+            collideP2 = true
+        end
     end
 end
 

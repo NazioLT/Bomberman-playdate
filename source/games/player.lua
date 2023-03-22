@@ -63,6 +63,7 @@ function Player:init(i, j, player)
 
     self:playAnimation()
 
+    -- Finish
     local x, y = tileToPixel(i, j)
     self:moveTo(x, y - 8)
     self:setZIndex(10)

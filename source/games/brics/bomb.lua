@@ -1,11 +1,13 @@
 class('Bomb').extends(GameObject)
 
-function Bomb.new(i, j)
-    return Bomb(i, j)
+function Bomb.new(i, j, player)
+    return Bomb(i, j, player)
 end
 
-function Bomb:init(i, j)
+function Bomb:init(i, j, player)
     Bomb.super.init(self, i, j, 5, true)
+
+    self.player = player
 
     local animationTickStep = 10
 
@@ -30,7 +32,6 @@ function Bomb:init(i, j)
         self:explode()
     end
 
-    local sprites = playdate.graphics.sprite.querySpritesAtPoint(self.x, self.y + 8)
     local collideP1, collideP2 = false, false
 
     if player1 ~= nil then
@@ -49,5 +50,6 @@ function Bomb:init(i, j)
 end
 
 function Bomb:explode()
+    self.player:removeBomb(self)
     self:remove()
 end

@@ -116,5 +116,10 @@ function Player:dropBomb()
     end
 
     local i, j = pixelToTile(self.x, self.y + 8)
-    self.bombs[#self.bombs + 1] = Bomb.new(i, j)
+    self.bombs[#self.bombs + 1] = Bomb.new(i, j, self)
+end
+
+function Player:removeBomb(bomb)
+    local bombtable = self.bombs
+    table.remove(bombtable, table.indexOfElement(bombtable , bomb))
 end

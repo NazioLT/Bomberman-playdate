@@ -3,19 +3,11 @@ class('GameObject').extends(AnimatedSprite)
 tileSheetImagetable = playdate.graphics.imagetable.new('images/env-table-16-16.png')
 
 collisionGroup = {
-    player1 = 2,
-    player2 = 3,
+    p1Collide = 2,
+    p2Collide = 3,
     bomb = 4,
     block = 5,
 }
-
-function tileToPixel(i, j)
-    return (i + 5) * 16 - 8, j * 16 - 8
-end
-
-function pixelToTile(x, y)
-    return math.floor((x - 8 - 16 * 5) / 16 + 1 + 0.5), math.floor((y - 8) / 16 + 1 + 0.5)
-end
 
 function GameObject:fixImage(imageIndex)
     local image = tileSheetImagetable:getImage(imageIndex)

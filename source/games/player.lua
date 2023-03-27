@@ -2,7 +2,7 @@ class('Player').extends(AnimatedSprite)
 
 playerImagetable = playdate.graphics.imagetable.new('images/character-table-32-32.png')
 
-P0, P1 = 0, 1
+P1, P2 = 0, 1
 
 function Player:init(i, j, player)
     Player.super.init(self, playerImagetable)
@@ -17,12 +17,15 @@ function Player:init(i, j, player)
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
     self.lastDirection = "Bot"
 
-    local playerShift = player == P0 and 0 or 5
+    local playerShift = player == P1 and 0 or 5
     local tickSpeed = 10
 
     -- Colliders
     self:setCollideRect(10, 18, 12, 12)
-    self:setCollidesWithGroups({ collisionGroup.block, collisionGroup.shiftBlock })
+
+    local playerCollisions = { collisionGroup.block }
+    collisionGroup[#collisionGroup+1] = player == P1 and collisionGroup.p1Collide or collisionGroup.p2Collide
+    self:setCollidesWithGroups(playerCollisions)
 
     -- Animation
     self:addState('IdleBot', 19 + playerShift, 19 + playerShift, {

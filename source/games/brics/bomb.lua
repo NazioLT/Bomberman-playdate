@@ -47,6 +47,24 @@ function Bomb:init(i, j, player)
             collideP2 = true
         end
     end
+
+    local collisionGroups = { collisionGroup.bomb }
+
+    if collideP1 == false then
+        collisionGroups[#collisionGroups + 1] = collisionGroup.p1Collide
+    end
+
+    if collideP2 == false then
+        collisionGroups[#collisionGroups + 1] = collisionGroup.p2Collide
+    end
+
+    self:setGroups(collisionGroups)
+end
+
+function Bomb:update()
+    Bomb.super.update(self)
+
+    
 end
 
 function Bomb:explode()

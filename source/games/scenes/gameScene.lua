@@ -59,7 +59,7 @@ function GameScene:enter()
     self:setFloors()
 
     -- Add Player
-    player1 = Player(2, 2, P0)
+    player1 = Player(2, 2, P1)
 end
 
 function GameScene:addNewElement(type, i, j, ...)
@@ -126,7 +126,7 @@ end
 
 function GameScene:remove(i, j, object)
     local caseTable = self.tiles[i][j]
-    local index = getIndexOfObject(caseTable, object)
+    local index = table.indexOfElement(caseTable , object)
 
     if index then
         caseTable.remove(caseTable, object)

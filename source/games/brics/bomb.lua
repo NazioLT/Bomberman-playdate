@@ -9,7 +9,7 @@ function Bomb:init(i, j, player)
 
     self.player = player
 
-    local animationTickStep = 10
+    local animationTickStep = 50
 
     self:addState('BombSlow', 1, 3, {
         tickStep = animationTickStep,
@@ -32,30 +32,25 @@ function Bomb:init(i, j, player)
         self:explode()
     end
 
-    local collideP1, collideP2 = false, false
-
-    if player1 ~= nil then
-        local pi, pj = pixelToTile(player1.x, player1.y)
-        if pi == i and pj == j then
-            collideP1 = true
-        end
-    end
-
-    if player2 ~= nil then
-        local pi, pj = pixelToTile(player2.x, player2.y)
-        if pi == i and pj == j then
-            collideP2 = true
-        end
-    end
+    self:setCollidesWithGroups({ collisionGroup.p1, collisionGroup.p2, collisionGroup.bomb, collisionGroup.item,
+    collisionGroup.block })
 
     local collisionGroups = { collisionGroup.bomb }
 
-    if collideP1 == false then
-        collisionGroups[#collisionGroups + 1] = collisionGroup.p1Collide
-    end
+    self.p1CollEnabled = false;
+    self.p2CollEnabled = false;
 
-    if collideP2 == false then
-        collisionGroups[#collisionGroups + 1] = collisionGroup.p2Collide
+    local overlappingSprites = self:overlappingSprites()
+
+    for i = 1, #overlappingSprites, 1 do
+        if (overlappingSprites[i] == player1) then
+            collisionGroups[#collisionGroups + 1] = collisionGroup.ignoreP1
+            print("1")
+        end
+
+        if (overlappingSprites[i] == player2) then
+            collisionGroups[#collisionGroups + 1] = collisionGroup.ignoreP2
+        end
     end
 
     self:setGroups(collisionGroups)
@@ -64,7 +59,27 @@ end
 function Bomb:update()
     Bomb.super.update(self)
 
-    
+    local sprites = self:overlappingSprites()
+
+    local collideWithPlayer1, collideWithPlayer2 = false, false
+
+    for i = 1, #sprites, 1 do
+        if (sprites[i] == player1) then
+            collideWithPlayer1 = true
+            print("ee")
+        end
+        if (sprites[i] == player2) then
+            collideWithPlayer2 = true
+        end
+    end
+
+    if maskContainsGroup(self:getGroupMask(), collisionGroup.ignoreP1) and collideWithPlayer1 == false then
+        self:setGroupMask(self:getGroupMask() - bit(collisionGroup.ignoreP1))
+    end
+
+    -- if maskContainsGroup(self:getGroupMask(), collisionGroup.ignoreP2) and collideWithPlayer2 == false then
+    --     self:setGroupMask(self:getGroupMask() - bit(collisionGroup.ignoreP2))
+    -- end
 end
 
 function Bomb:explode()

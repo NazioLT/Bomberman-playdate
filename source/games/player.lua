@@ -2,7 +2,7 @@ class('Player').extends(AnimatedSprite)
 
 playerImagetable = playdate.graphics.imagetable.new('images/character-table-32-32.png')
 
-P1, P2 = 0, 1
+P1, P2 = 1, 2
 
 function Player:init(i, j, player)
     Player.super.init(self, playerImagetable)
@@ -12,6 +12,7 @@ function Player:init(i, j, player)
     self.speed = 3
     self.nbBombMax = 2
     self.dead = false
+    self.playerNumber = player
 
     self.velocity = playdate.geometry.vector2D.new(0, 0)
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
@@ -23,8 +24,11 @@ function Player:init(i, j, player)
     -- Colliders
     self:setCollideRect(10, 18, 12, 12)
 
-    local playerCollisions = { collisionGroup.block }
-    collisionGroup[#collisionGroup+1] = player == P1 and collisionGroup.p1Collide or collisionGroup.p2Collide
+    local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
+    -- self:setGroups(playerCollisionGroup)
+    self:setGroups(playerCollisionGroup)
+    
+    local playerCollisions = { collisionGroup.block, collisionGroup.bomb }
     self:setCollidesWithGroups(playerCollisions)
 
     -- Animation
@@ -76,6 +80,18 @@ function Player:setDirection(x, y)
     local moveInputs = playdate.geometry.vector2D.new(x, y)
     moveInputs:normalize()
     self.moveInputs = moveInputs;
+end
+
+function Player:collisionResponse(other)
+    if self.playerNumber == P1 and maskContainsGroup(other:getGroupMask(), collisionGroup.ignoreP1) then
+        return playdate.graphics.sprite.kCollisionTypeOverlap
+    end
+
+    if self.playerNumber == P2 and maskContainsGroup(other:getGroupMask(), collisionGroup.ignoreP2) then
+        return playdate.graphics.sprite.kCollisionTypeOverlap
+    end
+
+    return playdate.graphics.sprite.kCollisionTypeSlide
 end
 
 function Player:update()

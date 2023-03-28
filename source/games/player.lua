@@ -2,7 +2,7 @@ class('Player').extends(AnimatedSprite)
 
 playerImagetable = playdate.graphics.imagetable.new('images/character-table-32-32.png')
 
-P0, P1 = 0, 1
+P1, P2 = 1, 2
 
 function Player:init(i, j, player)
     Player.super.init(self, playerImagetable)
@@ -10,19 +10,26 @@ function Player:init(i, j, player)
     -- variables
     self.bombs = {}
     self.speed = 3
-    self.nbBombMax = 1
+    self.nbBombMax = 2
     self.dead = false
+    self.playerNumber = player
 
     self.velocity = playdate.geometry.vector2D.new(0, 0)
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
     self.lastDirection = "Bot"
 
-    local playerShift = playerNumber == P1 and 0 or 5
+    local playerShift = player == P1 and 0 or 5
     local tickSpeed = 10
 
     -- Colliders
     self:setCollideRect(10, 18, 12, 12)
-    self:setCollidesWithGroups({ collisionGroup.block, collisionGroup.shiftBlock })
+
+    local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
+    -- self:setGroups(playerCollisionGroup)
+    self:setGroups(playerCollisionGroup)
+    
+    local playerCollisions = { collisionGroup.block, collisionGroup.bomb }
+    self:setCollidesWithGroups(playerCollisions)
 
     -- Animation
     self:addState('IdleBot', 19 + playerShift, 19 + playerShift, {
@@ -63,6 +70,7 @@ function Player:init(i, j, player)
 
     self:playAnimation()
 
+    -- Finish
     local x, y = tileToPixel(i, j)
     self:moveTo(x, y - 8)
     self:setZIndex(10)
@@ -72,6 +80,18 @@ function Player:setDirection(x, y)
     local moveInputs = playdate.geometry.vector2D.new(x, y)
     moveInputs:normalize()
     self.moveInputs = moveInputs;
+end
+
+function Player:collisionResponse(other)
+    if self.playerNumber == P1 and maskContainsGroup(other:getGroupMask(), collisionGroup.ignoreP1) then
+        return playdate.graphics.sprite.kCollisionTypeOverlap
+    end
+
+    if self.playerNumber == P2 and maskContainsGroup(other:getGroupMask(), collisionGroup.ignoreP2) then
+        return playdate.graphics.sprite.kCollisionTypeOverlap
+    end
+
+    return playdate.graphics.sprite.kCollisionTypeSlide
 end
 
 function Player:update()
@@ -97,4 +117,28 @@ function Player:update()
     end
 
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
+end
+
+function Player:dropBomb()
+    if self.nbBombMax <= #self.bombs then
+        return
+    end
+
+    -- Si déja une bombe sur la tile, return
+    local sprites = playdate.graphics.sprite.querySpritesAtPoint(self.x, self.y + 8)
+    if sprites ~= nil then
+        for i = 1, #sprites, 1 do
+            if sprites[i]:isa(Bomb) then
+                return
+            end
+        end
+    end
+
+    local i, j = pixelToTile(self.x, self.y + 8)
+    self.bombs[#self.bombs + 1] = Bomb.new(i, j, self)
+end
+
+function Player:removeBomb(bomb)
+    local bombtable = self.bombs
+    table.remove(bombtable, table.indexOfElement(bombtable , bomb))
 end

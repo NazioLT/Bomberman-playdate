@@ -1,12 +1,7 @@
 class('Block').extends(GameObject)
 
-function Block:init(i, j, isShiftBlock)
+function Block:init(i, j)
     Block.super.init(self, i, j, 3, true)
 
-    if isShiftBlock == true then
-        self:setGroups(collisionGroup.shiftBlock)
-    else
-        self:setGroups(collisionGroup.block)
-    end
-
+    self:setGroups(collisionGroup.block)
 end

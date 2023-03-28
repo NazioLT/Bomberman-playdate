@@ -1,7 +1,8 @@
-GameScene = {}
+gameScene = {}
 class('GameScene').extends(NobleScene)
 
 player1 = nil
+player2 = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 
@@ -20,6 +21,9 @@ function GameScene:init()
         end,
         rightButtonHold = function()
             player1:setDirection(1, player1.moveInputs.y)
+        end, 
+        AButtonDown = function ()
+            player1:dropBomb()
         end
     }
 end
@@ -55,7 +59,7 @@ function GameScene:enter()
     self:setFloors()
 
     -- Add Player
-    player1 = Player(2, 2, P0)
+    player1 = Player(2, 2, P1)
 end
 
 function GameScene:addNewElement(type, i, j, ...)
@@ -122,7 +126,7 @@ end
 
 function GameScene:remove(i, j, object)
     local caseTable = self.tiles[i][j]
-    local index = getIndexOfObject(caseTable, object)
+    local index = table.indexOfElement(caseTable , object)
 
     if index then
         caseTable.remove(caseTable, object)

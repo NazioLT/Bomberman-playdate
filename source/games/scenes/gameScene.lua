@@ -21,8 +21,8 @@ function GameScene:init()
         end,
         rightButtonHold = function()
             player1:setDirection(1, player1.moveInputs.y)
-        end, 
-        AButtonDown = function ()
+        end,
+        AButtonDown = function()
             player1:dropBomb()
         end
     }
@@ -33,6 +33,7 @@ function GameScene:enter()
 
     -- Init map data --
     self.tiles = {}
+    gameScene = self
 
     for i = 1, 15, 1 do
         self.tiles[i] = {}
@@ -126,9 +127,24 @@ end
 
 function GameScene:remove(i, j, object)
     local caseTable = self.tiles[i][j]
-    local index = table.indexOfElement(caseTable , object)
+    local index = table.indexOfElement(caseTable, object)
 
     if index then
         caseTable.remove(caseTable, object)
     end
+end
+
+function GameScene:isWalkable(i, j)
+    if i <= 1 or i >= 15 then
+        return false
+    end
+
+    local caseTable = self.tiles[i][j]
+    for n = 1, #caseTable, 1 do
+        if caseTable[n]:isa(Block) then
+            return false
+        end
+    end
+
+    return true
 end

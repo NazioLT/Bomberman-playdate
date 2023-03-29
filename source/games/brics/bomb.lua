@@ -9,6 +9,8 @@ function Bomb:init(i, j, player)
 
     self.player = player
 
+    self.explosionRange = 3
+
     local animationTickStep = 10
 
     self:addState('BombSlow', 1, 3, {
@@ -33,12 +35,12 @@ function Bomb:init(i, j, player)
     end
 
     self:setCollidesWithGroups({ collisionGroup.p1, collisionGroup.p2, collisionGroup.bomb, collisionGroup.item,
-    collisionGroup.block })
+        collisionGroup.block })
 
     local collisionGroups = { collisionGroup.bomb }
 
-    self.p1CollEnabled = false;
-    self.p2CollEnabled = false;
+    self.p1CollEnabled = false
+    self.p2CollEnabled = false
 
     local overlappingSprites = self:overlappingSprites()
 
@@ -81,7 +83,55 @@ function Bomb:update()
 end
 
 function Bomb:explode()
+    local canRight, canTop, canBot, canLeft = true, true, true, true
+
     Explosion(self.i, self.j)
+
+    for n = 1, self.explosionRange, 1 do
+        -- if canBot then
+        --     canBot = gameScene:isWalkable(self.i, self.j + n)
+        -- end
+        -- if canTop then
+        --     canTop = gameScene:isWalkable(self.i, self.j - n)
+        -- end
+        -- if canRight then
+        --     canRight = gameScene:isWalkable(self.i + n, self.j)
+        -- end
+        -- if canLeft then
+        --     canLeft = gameScene:isWalkable(self.i - n, self.j)
+        -- end
+
+        -- if canBot then
+        --     Explosion(self.i, self.j + n)
+        -- end
+        -- if canTop then
+        --     Explosion(self.i, self.j - n)
+        -- end
+        -- if canRight then
+        --     Explosion(self.i + n, self.j)
+        -- end
+        -- if canLeft then
+        --     Explosion(self.i - n, self.j)
+        -- end
+        canBot = self:tryPoseExplosion(canBot, self.i, self.j + n)
+        canTop = self:tryPoseExplosion(canTop, self.i, self.j - n)
+        canRight = self:tryPoseExplosion(canRight, self.i + 1, self.j)
+        canLeft = self:tryPoseExplosion(canLeft, self.i - 1, self.j)
+    end
+
     self.player:removeBomb(self)
     self:remove()
+end
+
+function Bomb:tryPoseExplosion(canPose, i, j)
+    if canPose then
+        canPose = gameScene:isWalkable(i, j)
+    end
+
+    if canPose == false then
+        return false
+    end
+
+    Explosion(i, j)
+    return true
 end

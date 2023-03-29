@@ -9,3 +9,7 @@ function Bric:init(i, j)
 
     self:fixImage(44)
 end
+
+function Bric:breakBlock()
+    self:remove()
+end

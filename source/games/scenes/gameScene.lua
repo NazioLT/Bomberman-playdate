@@ -134,17 +134,17 @@ function GameScene:remove(i, j, object)
     end
 end
 
-function GameScene:isWalkable(i, j)
+function GameScene:isWalkable(i, j)--Return if is walkable and breakableblock
     if i <= 1 or i >= 15 then
-        return false
+        return false, nil
     end
 
     local caseTable = self.tiles[i][j]
     for n = 1, #caseTable, 1 do
         if caseTable[n]:isa(Block) then
-            return false
+            return false, caseTable[n]:isa(Bric) and caseTable[n] or nil
         end
     end
 
-    return true
+    return true, nil
 end

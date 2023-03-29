@@ -124,8 +124,12 @@ function Bomb:explode()
 end
 
 function Bomb:tryPoseExplosion(canPose, i, j)
+    local breakableBlock = false
     if canPose then
-        canPose = gameScene:isWalkable(i, j)
+        canPose, breakableBlock = gameScene:isWalkable(i, j)
+        if breakableBlock ~= nil then
+            breakableBlock:breakBlock()
+        end
     end
 
     if canPose == false then

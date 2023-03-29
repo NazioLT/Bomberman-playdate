@@ -11,6 +11,18 @@ function Bric:init(i, j)
 end
 
 function Bric:breakBlock()
-    gameScene:remove(self.i, self.j, self)
-    self:remove()
+    local animationTickStep = 5
+
+    self:addState('Destroy', 1, 3, {
+        tickStep = animationTickStep,
+        loop = false,
+        frames = { 45, 46, 47 }
+    }).asDefault()
+
+    self:playAnimation()
+
+    self.states.Destroy.onAnimationEndEvent = function(self)
+        gameScene:remove(self.i, self.j, self)
+        self:remove()
+    end
 end

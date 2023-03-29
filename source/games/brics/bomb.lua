@@ -9,7 +9,7 @@ function Bomb:init(i, j, player)
 
     self.player = player
 
-    local animationTickStep = 50
+    local animationTickStep = 10
 
     self:addState('BombSlow', 1, 3, {
         tickStep = animationTickStep,
@@ -45,7 +45,6 @@ function Bomb:init(i, j, player)
     for i = 1, #overlappingSprites, 1 do
         if (overlappingSprites[i] == player1) then
             collisionGroups[#collisionGroups + 1] = collisionGroup.ignoreP1
-            print("1")
         end
 
         if (overlappingSprites[i] == player2) then
@@ -66,7 +65,6 @@ function Bomb:update()
     for i = 1, #sprites, 1 do
         if (sprites[i] == player1) then
             collideWithPlayer1 = true
-            print("ee")
         end
         if (sprites[i] == player2) then
             collideWithPlayer2 = true
@@ -83,6 +81,7 @@ function Bomb:update()
 end
 
 function Bomb:explode()
+    Explosion(self.i, self.j)
     self.player:removeBomb(self)
     self:remove()
 end

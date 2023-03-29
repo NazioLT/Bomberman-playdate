@@ -25,7 +25,6 @@ function Player:init(i, j, player)
     self:setCollideRect(10, 18, 12, 12)
 
     local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
-    -- self:setGroups(playerCollisionGroup)
     self:setGroups(playerCollisionGroup)
     
     local playerCollisions = { collisionGroup.block, collisionGroup.bomb }

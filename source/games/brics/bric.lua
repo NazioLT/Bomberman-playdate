@@ -11,7 +11,7 @@ function Bric:init(i, j)
 end
 
 function Bric:breakBlock()
-    local animationTickStep = 5
+    local animationTickStep = 7
 
     self:addState('Destroy', 1, 3, {
         tickStep = animationTickStep,

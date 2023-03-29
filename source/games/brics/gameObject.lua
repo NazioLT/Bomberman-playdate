@@ -9,6 +9,8 @@ collisionGroup = {
     block = 4,
     item = 5,
     ignoreP1 = 6,
+    ignoreP2 = 7,
+    explosion = 8
 }
 
 function GameObject:fixImage(imageIndex)

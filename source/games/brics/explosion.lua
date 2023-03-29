@@ -18,6 +18,10 @@ end
 function Explosion:init(i, j, animationShift)
     Explosion.super.init(self, i, j, 3, true)
 
+    self:setGroups(collisionGroup.explosion)
+
+    self:setCollidesWithGroups({ collisionGroup.p1, collisionGroup.p2 })
+
     local animationTickStep = 5
 
     self:addState('Explosion', 1, 4, {

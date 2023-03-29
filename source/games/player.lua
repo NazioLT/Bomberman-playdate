@@ -7,10 +7,13 @@ P1, P2 = 1, 2
 function Player:init(i, j, player)
     Player.super.init(self, playerImagetable)
 
+    self.invincible = false
+
     -- variables
     self.bombs = {}
     self.speed = 3
-    self.nbBombMax = 2
+    self.explosionRange = 1
+    self.nbBombMax = 1
     self.dead = false
     self.playerNumber = player
 
@@ -27,7 +30,7 @@ function Player:init(i, j, player)
     local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
     self:setGroups(playerCollisionGroup)
     
-    local playerCollisions = { collisionGroup.block, collisionGroup.bomb }
+    local playerCollisions = { collisionGroup.block, collisionGroup.bomb, collisionGroup.explosion }
     self:setCollidesWithGroups(playerCollisions)
 
     -- Animation
@@ -66,6 +69,11 @@ function Player:init(i, j, player)
         yoyo = true,
         frames = { 29 + playerShift, 28 + playerShift, 30 + playerShift }
     })
+    self:addState('Die', 1, 4, {
+        tickStep = tickSpeed,
+        loop = false,
+        frames = { 64 + playerShift, 65 + playerShift, 66 + playerShift, 67 + playerShift }
+    })
 
     self:playAnimation()
 
@@ -82,6 +90,11 @@ function Player:setDirection(x, y)
 end
 
 function Player:collisionResponse(other)
+    if maskContainsGroup(other:getGroupMask(), collisionGroup.explosion) then
+        self:kill()
+        return playdate.graphics.sprite.kCollisionTypeOverlap
+    end
+
     if self.playerNumber == P1 and maskContainsGroup(other:getGroupMask(), collisionGroup.ignoreP1) then
         return playdate.graphics.sprite.kCollisionTypeOverlap
     end
@@ -95,6 +108,11 @@ end
 
 function Player:update()
     Player.super.update(self)
+
+    if self.dead then
+        self:changeState('Die', true)
+        return
+    end
 
     local velocity = self.moveInputs * self.speed
     self:moveWithCollisions(self.x + velocity.x, self.y + velocity.y)
@@ -119,6 +137,11 @@ function Player:update()
 end
 
 function Player:dropBomb()
+    if self.dead then
+        self:changeState('Die', true)
+        return
+    end
+
     if self.nbBombMax <= #self.bombs then
         return
     end
@@ -140,4 +163,16 @@ end
 function Player:removeBomb(bomb)
     local bombtable = self.bombs
     table.remove(bombtable, table.indexOfElement(bombtable , bomb))
+end
+
+function Player:kill()
+    if self.invincible then
+        return
+    end
+
+    self.dead = true
+
+    self.states.Die.onAnimationEndEvent = function(self)
+        self:remove()
+    end
 end

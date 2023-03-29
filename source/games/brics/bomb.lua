@@ -9,7 +9,7 @@ function Bomb:init(i, j, player)
 
     self.player = player
 
-    self.explosionRange = 3
+    self.explosionRange = player.explosionRange
 
     local animationTickStep = 5
 

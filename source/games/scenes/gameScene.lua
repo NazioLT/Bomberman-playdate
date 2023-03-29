@@ -149,3 +149,8 @@ function GameScene:isWalkable(i, j) --Return if is walkable and breakableblock
 
     return true, nil
 end
+
+function GameScene:hasTypeAtCoordinates(i, j, type)
+    local caseTable = self.tiles[i][j]
+    return hasTypeInTable(caseTable, type)
+end

@@ -87,26 +87,29 @@ function Bomb:explode()
 
     print("Explode " .. self.i .. " : " .. self.j)
 
-    Explosion(self.i, self.j)
+    Explosion(self.i, self.j, explosionAnim.cross)
 
     for n = 1, self.explosionRange, 1 do
-        canBot = self:tryPoseExplosion(canBot, self.i, self.j + n)
-        canTop = self:tryPoseExplosion(canTop, self.i, self.j - n)
-        canRight = self:tryPoseExplosion(canRight, self.i + n, self.j)
-        canLeft = self:tryPoseExplosion(canLeft, self.i - n, self.j)
+        local endAnim = n == self.explosionRange
+
+        canBot = self:tryPoseExplosion(canBot, self.i, self.j + n, 0, 1, endAnim)
+        canTop = self:tryPoseExplosion(canTop, self.i, self.j - n, 0, -1, endAnim)
+        canRight = self:tryPoseExplosion(canRight, self.i + n, self.j, 1, 0, endAnim)
+        canLeft = self:tryPoseExplosion(canLeft, self.i - n, self.j, -1, 0, endAnim)
     end
 
     self.player:removeBomb(self)
     self:remove()
 end
 
-function Bomb:tryPoseExplosion(canPose, i, j)
+function Bomb:tryPoseExplosion(canPose, i, j, iDir, jDir, endAnim)
     local breakableBlock = false
+
+    -- Si peut poser, regarde si peu poser le suivant
     if canPose then
         canPose, breakableBlock = gameScene:isWalkable(i, j)
         if breakableBlock ~= nil then
             breakableBlock:breakBlock()
-            print(i .. " : " .. j)
         end
     end
 
@@ -114,6 +117,33 @@ function Bomb:tryPoseExplosion(canPose, i, j)
         return false
     end
 
-    Explosion(i, j)
+    local anim = explosionAnim.cross
+
+    -- Fin a la case d'après
+    if endAnim or gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Block) then
+        anim = self:endExplosion(iDir, jDir)
+    else
+        -- Sinon
+        anim = math.abs(iDir) > math.abs(jDir) and explosionAnim.horizontal or explosionAnim.vertical
+    end
+
+    Explosion(i, j, anim)
     return true
+end
+
+function Bomb:endExplosion(iDir, jDir)
+    if iDir == 1 then
+        return explosionAnim.right
+    end
+    if iDir == -1 then
+        return explosionAnim.left
+    end
+    if jDir == 1 then
+        return explosionAnim.bot
+    end
+    if jDir == -1 then
+        return explosionAnim.top
+    end
+
+    return explosionAnim.cross
 end

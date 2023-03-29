@@ -1,10 +1,21 @@
 class('Explosion').extends(GameObject)
 
-function Explosion.new(i, j)
-    return Explosion(i, j)
+explosionAnim =
+{
+    left = 1,
+    horizontal = 2,
+    cross = 3,
+    right = 4,
+    top = 5,
+    vertical = 6,
+    bot = 7,
+}
+
+function Explosion.new(i, j, animationShift)
+    return Explosion(i, j, animationShift)
 end
 
-function Explosion:init(i, j)
+function Explosion:init(i, j, animationShift)
     Explosion.super.init(self, i, j, 3, true)
 
     local animationTickStep = 5
@@ -13,7 +24,7 @@ function Explosion:init(i, j)
         tickStep = animationTickStep,
         loop = false,
         -- nextAnimation = 'BombFast',
-        frames = { 3, 10, 17, 24 }
+        frames = { animationShift, 7 + animationShift, 14 + animationShift, 21 + animationShift }
     }).asDefault()
 
     self:playAnimation()

@@ -12,4 +12,6 @@ end
 function Floor:init(i, j)
     Floor.super.init(self, i, j)
     self:fixImage(49)
+
+    self:setZIndex(1)
 end

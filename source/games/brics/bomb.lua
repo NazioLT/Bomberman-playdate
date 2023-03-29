@@ -11,7 +11,7 @@ function Bomb:init(i, j, player)
 
     self.explosionRange = 3
 
-    local animationTickStep = 10
+    local animationTickStep = 5
 
     self:addState('BombSlow', 1, 3, {
         tickStep = animationTickStep,
@@ -85,38 +85,15 @@ end
 function Bomb:explode()
     local canRight, canTop, canBot, canLeft = true, true, true, true
 
+    print("Explode " .. self.i .. " : " .. self.j)
+
     Explosion(self.i, self.j)
 
     for n = 1, self.explosionRange, 1 do
-        -- if canBot then
-        --     canBot = gameScene:isWalkable(self.i, self.j + n)
-        -- end
-        -- if canTop then
-        --     canTop = gameScene:isWalkable(self.i, self.j - n)
-        -- end
-        -- if canRight then
-        --     canRight = gameScene:isWalkable(self.i + n, self.j)
-        -- end
-        -- if canLeft then
-        --     canLeft = gameScene:isWalkable(self.i - n, self.j)
-        -- end
-
-        -- if canBot then
-        --     Explosion(self.i, self.j + n)
-        -- end
-        -- if canTop then
-        --     Explosion(self.i, self.j - n)
-        -- end
-        -- if canRight then
-        --     Explosion(self.i + n, self.j)
-        -- end
-        -- if canLeft then
-        --     Explosion(self.i - n, self.j)
-        -- end
         canBot = self:tryPoseExplosion(canBot, self.i, self.j + n)
         canTop = self:tryPoseExplosion(canTop, self.i, self.j - n)
-        canRight = self:tryPoseExplosion(canRight, self.i + 1, self.j)
-        canLeft = self:tryPoseExplosion(canLeft, self.i - 1, self.j)
+        canRight = self:tryPoseExplosion(canRight, self.i + n, self.j)
+        canLeft = self:tryPoseExplosion(canLeft, self.i - n, self.j)
     end
 
     self.player:removeBomb(self)
@@ -129,6 +106,7 @@ function Bomb:tryPoseExplosion(canPose, i, j)
         canPose, breakableBlock = gameScene:isWalkable(i, j)
         if breakableBlock ~= nil then
             breakableBlock:breakBlock()
+            print(i .. " : " .. j)
         end
     end
 

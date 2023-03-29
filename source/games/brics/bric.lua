@@ -11,5 +11,6 @@ function Bric:init(i, j)
 end
 
 function Bric:breakBlock()
+    gameScene:remove(self.i, self.j, self)
     self:remove()
 end

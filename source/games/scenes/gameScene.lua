@@ -108,33 +108,34 @@ function GameScene:spawnBrics()
 end
 
 function GameScene:setFloors()
-    for i = 2, 14, 1 do
-        for j = 2, 14, 1 do
-            local caseTable = self.tiles[i][j]
+    -- A completer plus tard pour mettre les ombres
 
-            if hasTypeInTable(caseTable, Block) == false then
-                local upTable = self.tiles[i][j - 1]
-                local floor = self:addNewElement(Floor, i, j)
+    -- for i = 2, 14, 1 do
+    --     for j = 2, 14, 1 do
+    --         local caseTable = self.tiles[i][j]
 
-                if hasTypeInTable(upTable, Block)
-                then
-                    floor:setShadow(true)
-                end
-            end
-        end
-    end
+    --         if hasTypeInTable(caseTable, Block) == false then
+    --             local floor = self:addNewElement(Floor, i, j)
+    --             local upTable = self.tiles[i][j - 1]
+
+    --             if hasTypeInTable(upTable, Block) then
+    --                 floor:setShadow(true)
+    --             end
+    --         end
+    --     end
+    -- end
 end
 
 function GameScene:remove(i, j, object)
     local caseTable = self.tiles[i][j]
     local index = table.indexOfElement(caseTable, object)
 
-    if index then
-        caseTable.remove(caseTable, object)
+    if index ~= nil then
+        table.remove(caseTable, index)
     end
 end
 
-function GameScene:isWalkable(i, j)--Return if is walkable and breakableblock
+function GameScene:isWalkable(i, j) --Return if is walkable and breakableblock
     if i <= 1 or i >= 15 then
         return false, nil
     end

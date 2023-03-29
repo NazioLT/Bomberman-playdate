@@ -1,11 +1,11 @@
 function hasTypeInTable(table, type)
     for _, value in pairs(table) do
         if value:isa(type) then
-            return true
+            return true, value
         end
     end
 
-    return false
+    return false, nil
 end
 
 function tileToPixel(i, j)

@@ -9,3 +9,9 @@ function BombItem:init(i, j)
 
     self:fixImage(40)
 end
+
+function BombItem:pick(player)
+    player.nbBombMax += 1
+    
+    BombItem.super.pick(self, player)
+end

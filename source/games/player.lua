@@ -30,7 +30,7 @@ function Player:init(i, j, player)
     local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
     self:setGroups(playerCollisionGroup)
     
-    local playerCollisions = { collisionGroup.block, collisionGroup.bomb, collisionGroup.explosion }
+    local playerCollisions = { collisionGroup.block, collisionGroup.bomb, collisionGroup.explosion, collisionGroup.item }
     self:setCollidesWithGroups(playerCollisions)
 
     -- Animation
@@ -92,6 +92,11 @@ end
 function Player:collisionResponse(other)
     if maskContainsGroup(other:getGroupMask(), collisionGroup.explosion) then
         self:kill()
+        return playdate.graphics.sprite.kCollisionTypeOverlap
+    end
+
+    if maskContainsGroup(other:getGroupMask(), collisionGroup.item) then
+        other:pick(self)
         return playdate.graphics.sprite.kCollisionTypeOverlap
     end
 

@@ -36,4 +36,10 @@ function Explosion:init(i, j, animationShift)
     self.states.Explosion.onAnimationEndEvent = function(self)
         self:remove()
     end
+
+    local hasItemInCoord, item = gameScene:hasTypeAtCoordinates(self.i, self.j, Item)
+
+    if hasItemInCoord then
+        item:remove()
+    end
 end

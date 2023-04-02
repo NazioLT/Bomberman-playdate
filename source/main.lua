@@ -24,5 +24,6 @@ import "games/brics/explosion.lua"
 import "games/items/item.lua"
 import "games/items/bombItem.lua"
 import "games/items/powerItem.lua"
+import "games/items/speedItem.lua"
 
 Noble.new(SimpleScene)

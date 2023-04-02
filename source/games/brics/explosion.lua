@@ -22,7 +22,7 @@ function Explosion:init(i, j, animationShift)
 
     self:setCollidesWithGroups({ collisionGroup.p1, collisionGroup.p2 })
 
-    local animationTickStep = 5
+    local animationTickStep = 3
 
     self:addState('Explosion', 1, 4, {
         tickStep = animationTickStep,

@@ -61,8 +61,10 @@ function GameScene:enter()
 
     -- self:addNewElement(PowerItem, 2, 3)
 
-    self:spawnItem(bricCoords, { PowerItem, PowerItem, PowerItem, PowerItem, PowerItem,
-    BombItem, BombItem, BombItem, BombItem } )
+    self:spawnItem(bricCoords, { 
+        PowerItem, PowerItem, PowerItem, PowerItem,
+        BombItem, BombItem, BombItem, BombItem,
+        SpeedItem, SpeedItem, SpeedItem })
 
     -- Add Player
     player1 = Player(2, 2, P1)
@@ -82,10 +84,7 @@ function GameScene:spawnItem(coordinates, Types)
     for i = 1, #Types, 1 do
         local index = math.random(1, #coordinates)
         local coords = coordinates[index]
-        print(coords[1])
-        print(coords[2])
         self:addNewElement(Types[i], coords[1], coords[2])
-    
         table.remove(coordinates, index)
     end
 end
@@ -109,7 +108,7 @@ end
 
 function GameScene:spawnBrics()
     local bricProbability = 0.6
-    local coords = { }
+    local coords = {}
 
     for i = 2, 14, 1 do
         for j = 2, 14, 1 do
@@ -121,7 +120,7 @@ function GameScene:spawnBrics()
             then
                 self:addNewElement(Bric, i, j)
                 local coord = { i, j }
-                coords[#coords+1] = coord
+                coords[#coords + 1] = coord
             end
         end
     end

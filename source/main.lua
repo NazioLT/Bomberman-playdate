@@ -21,4 +21,7 @@ import "games/brics/floor.lua"
 import "games/brics/bomb.lua"
 import "games/brics/explosion.lua"
 
+import "games/brics/items/item.lua"
+import "games/brics/items/bombItem.lua"
+
 Noble.new(SimpleScene)

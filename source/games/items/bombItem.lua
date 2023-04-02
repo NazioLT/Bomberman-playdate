@@ -5,9 +5,7 @@ function BombItem.new(i, j)
 end
 
 function BombItem:init(i, j)
-    BombItem.super.init(self, i, j)
-
-    self:fixImage(40)
+    BombItem.super.init(self, i, j, 40)
 end
 
 function BombItem:pick(player)

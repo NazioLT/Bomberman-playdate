@@ -59,7 +59,7 @@ function GameScene:enter()
 
     self:setFloors()
 
-    self:addNewElement(BombItem, 2, 3)
+    self:addNewElement(PowerItem, 2, 3)
 
     -- Add Player
     player1 = Player(2, 2, P1)

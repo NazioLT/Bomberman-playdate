@@ -77,9 +77,9 @@ function Bomb:update()
         self:setGroupMask(self:getGroupMask() - bit(collisionGroup.ignoreP1))
     end
 
-    -- if maskContainsGroup(self:getGroupMask(), collisionGroup.ignoreP2) and collideWithPlayer2 == false then
-    --     self:setGroupMask(self:getGroupMask() - bit(collisionGroup.ignoreP2))
-    -- end
+    if maskContainsGroup(self:getGroupMask(), collisionGroup.ignoreP2) and collideWithPlayer2 == false then
+        self:setGroupMask(self:getGroupMask() - bit(collisionGroup.ignoreP2))
+    end
 end
 
 function Bomb:explode()

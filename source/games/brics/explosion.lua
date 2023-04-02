@@ -22,7 +22,7 @@ function Explosion:init(i, j, animationShift)
 
     self:setCollidesWithGroups({ collisionGroup.p1, collisionGroup.p2 })
 
-    local animationTickStep = 5
+    local animationTickStep = 3
 
     self:addState('Explosion', 1, 4, {
         tickStep = animationTickStep,
@@ -35,5 +35,11 @@ function Explosion:init(i, j, animationShift)
 
     self.states.Explosion.onAnimationEndEvent = function(self)
         self:remove()
+    end
+
+    local hasItemInCoord, item = gameScene:hasTypeAtCoordinates(self.i, self.j, Item)
+
+    if hasItemInCoord then
+        item:remove()
     end
 end

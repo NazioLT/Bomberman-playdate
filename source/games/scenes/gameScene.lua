@@ -55,11 +55,14 @@ function GameScene:enter()
     self:addNewElement(Empty, 13, 14)
     self:addNewElement(Empty, 14, 13)
 
-    self:spawnBrics()
+    local bricCoords = self:spawnBrics()
 
     self:setFloors()
 
-    self:addNewElement(PowerItem, 2, 3)
+    -- self:addNewElement(PowerItem, 2, 3)
+
+    self:spawnItem(bricCoords, { PowerItem, PowerItem, PowerItem, PowerItem, PowerItem,
+    BombItem, BombItem, BombItem, BombItem } )
 
     -- Add Player
     player1 = Player(2, 2, P1)
@@ -74,6 +77,18 @@ function GameScene:addNewElement(type, i, j, ...)
 end
 
 -- Shortcuts methods --
+
+function GameScene:spawnItem(coordinates, Types)
+    for i = 1, #Types, 1 do
+        local index = math.random(1, #coordinates)
+        local coords = coordinates[index]
+        print(coords[1])
+        print(coords[2])
+        self:addNewElement(Types[i], coords[1], coords[2])
+    
+        table.remove(coordinates, index)
+    end
+end
 
 function GameScene:spawnBorders()
     for i = 1, 15, 1 do
@@ -94,6 +109,7 @@ end
 
 function GameScene:spawnBrics()
     local bricProbability = 0.6
+    local coords = { }
 
     for i = 2, 14, 1 do
         for j = 2, 14, 1 do
@@ -104,9 +120,13 @@ function GameScene:spawnBrics()
                 and hasTypeInTable(table, Empty) == false
             then
                 self:addNewElement(Bric, i, j)
+                local coord = { i, j }
+                coords[#coords+1] = coord
             end
         end
     end
+
+    return coords
 end
 
 function GameScene:setFloors()

@@ -21,8 +21,8 @@ function GameScene:init()
         end,
         rightButtonHold = function()
             player1:setDirection(1, player1.moveInputs.y)
-        end, 
-        AButtonDown = function ()
+        end,
+        AButtonDown = function()
             player1:dropBomb()
         end
     }
@@ -33,6 +33,7 @@ function GameScene:enter()
 
     -- Init map data --
     self.tiles = {}
+    gameScene = self
 
     for i = 1, 15, 1 do
         self.tiles[i] = {}
@@ -107,28 +108,49 @@ function GameScene:spawnBrics()
 end
 
 function GameScene:setFloors()
-    for i = 2, 14, 1 do
-        for j = 2, 14, 1 do
-            local caseTable = self.tiles[i][j]
+    -- A completer plus tard pour mettre les ombres
 
-            if hasTypeInTable(caseTable, Block) == false then
-                local upTable = self.tiles[i][j - 1]
-                local floor = self:addNewElement(Floor, i, j)
+    -- for i = 2, 14, 1 do
+    --     for j = 2, 14, 1 do
+    --         local caseTable = self.tiles[i][j]
 
-                if hasTypeInTable(upTable, Block)
-                then
-                    floor:setShadow(true)
-                end
-            end
-        end
-    end
+    --         if hasTypeInTable(caseTable, Block) == false then
+    --             local floor = self:addNewElement(Floor, i, j)
+    --             local upTable = self.tiles[i][j - 1]
+
+    --             if hasTypeInTable(upTable, Block) then
+    --                 floor:setShadow(true)
+    --             end
+    --         end
+    --     end
+    -- end
 end
 
 function GameScene:remove(i, j, object)
     local caseTable = self.tiles[i][j]
-    local index = table.indexOfElement(caseTable , object)
+    local index = table.indexOfElement(caseTable, object)
 
-    if index then
-        caseTable.remove(caseTable, object)
+    if index ~= nil then
+        table.remove(caseTable, index)
     end
+end
+
+function GameScene:isWalkable(i, j) --Return if is walkable and breakableblock
+    if i <= 1 or i >= 15 then
+        return false, nil
+    end
+
+    local caseTable = self.tiles[i][j]
+    for n = 1, #caseTable, 1 do
+        if caseTable[n]:isa(Block) then
+            return false, caseTable[n]:isa(Bric) and caseTable[n] or nil
+        end
+    end
+
+    return true, nil
+end
+
+function GameScene:hasTypeAtCoordinates(i, j, type)
+    local caseTable = self.tiles[i][j]
+    return hasTypeInTable(caseTable, type)
 end

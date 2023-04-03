@@ -55,6 +55,16 @@ function Bomb:init(i, j, player)
     end
 
     self:setGroups(collisionGroups)
+
+    -- Sound
+    local sound = playdate.sound.sampleplayer
+    self.poseSound = sound.new('sounds/Place Bomb.wav')
+    self.poseSound:setVolume(0.6)
+
+    self.explodeSound = sound.new('sounds/Bomb Explodes.wav')
+    self.explodeSound:setVolume(0.6)
+
+    self.poseSound:play(1, 1)
 end
 
 function Bomb:update()
@@ -86,6 +96,7 @@ function Bomb:explode()
     local canRight, canTop, canBot, canLeft = true, true, true, true
 
     print("Explode " .. self.i .. " : " .. self.j)
+    self.explodeSound:play(1, 1)
 
     Explosion(self.i, self.j, explosionAnim.cross)
 

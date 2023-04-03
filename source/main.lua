@@ -26,4 +26,6 @@ import "games/items/bombItem.lua"
 import "games/items/powerItem.lua"
 import "games/items/speedItem.lua"
 
+import "games/ai/aiBehaviour.lua"
+
 Noble.new(SimpleScene)

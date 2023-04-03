@@ -3,6 +3,7 @@ class('GameScene').extends(NobleScene)
 
 player1 = nil
 player2 = nil
+aiBehaviour = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 
@@ -33,6 +34,10 @@ function GameScene:enter()
 
     -- Init map data --
     self.tiles = {}
+    self.walkableTiles = {}
+    for i = 1, 15, 1 do
+        self.walkableTiles[i] = {}
+    end
     gameScene = self
 
     for i = 1, 15, 1 do
@@ -59,13 +64,15 @@ function GameScene:enter()
 
     self:setFloors()
 
-    self:spawnItem(bricCoords, { 
+    self:spawnItem(bricCoords, {
         PowerItem, PowerItem, PowerItem, PowerItem,
         BombItem, BombItem, BombItem, BombItem,
         SpeedItem, SpeedItem, SpeedItem })
 
     -- Add Player
     player1 = Player(2, 2, P1)
+    player2 = Player(14, 14, P2)
+    aiBehaviour = AIBehaviour(player2)
 
     -- Sounds
     local sound = playdate.sound.sampleplayer
@@ -80,6 +87,17 @@ function GameScene:addNewElement(type, i, j, ...)
     caseTable[#caseTable + 1] = object
 
     return object
+end
+
+function GameScene:update()
+    GameScene.super.update(self)
+
+    -- Update Walkable array
+    for i = 1, 15, 1 do
+        for j = 1, 15, 1 do
+            self.walkableTiles[i][j] = self:isWalkable(i, j)
+        end
+    end
 end
 
 -- Shortcuts methods --
@@ -167,7 +185,7 @@ function GameScene:isWalkable(i, j) --Return if is walkable and breakableblock
 
     local caseTable = self.tiles[i][j]
     for n = 1, #caseTable, 1 do
-        if caseTable[n]:isa(Block) then
+        if caseTable[n]:isa(Block) or caseTable[n]:isa(Bomb) then
             return false, caseTable[n]:isa(Bric) and caseTable[n] or nil
         end
     end

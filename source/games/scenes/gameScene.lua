@@ -70,7 +70,7 @@ function GameScene:enter()
     -- Sounds
     local sound = playdate.sound.sampleplayer
     self.backgroundMusic = sound.new('sounds/SBomb1-Battle.wav')
-    self.backgroundMusic:setVolume(0.6)
+    self.backgroundMusic:setVolume(0)
     self.backgroundMusic:play(0, 1)
 end
 

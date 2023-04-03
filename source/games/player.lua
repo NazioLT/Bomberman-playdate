@@ -77,6 +77,11 @@ function Player:init(i, j, player)
 
     self:playAnimation()
 
+    -- Sound
+    local sound = playdate.sound.sampleplayer
+    self.walkSound = sound.new('sounds/Walking 1.wav')
+    self.walkSound:setVolume(0.6)
+
     -- Finish
     local x, y = tileToPixel(i, j)
     self:moveTo(x, y - 8)
@@ -136,6 +141,11 @@ function Player:update()
         self.lastDirection = "Right"
     else
         self:changeState('Idle' .. self.lastDirection, true)
+    end
+
+    if velocity.x ~= 0 and velocity.y ~= 0 and self.walkSound:isPlaying() == false then
+        self.walkSound:play(1, 1)
+    else 
     end
 
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)

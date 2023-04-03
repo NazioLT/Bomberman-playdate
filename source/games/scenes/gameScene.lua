@@ -59,8 +59,6 @@ function GameScene:enter()
 
     self:setFloors()
 
-    -- self:addNewElement(PowerItem, 2, 3)
-
     self:spawnItem(bricCoords, { 
         PowerItem, PowerItem, PowerItem, PowerItem,
         BombItem, BombItem, BombItem, BombItem,
@@ -68,6 +66,12 @@ function GameScene:enter()
 
     -- Add Player
     player1 = Player(2, 2, P1)
+
+    -- Sounds
+    local sound = playdate.sound.sampleplayer
+    self.backgroundMusic = sound.new('sounds/SBomb1-Battle.wav')
+    self.backgroundMusic:setVolume(0.6)
+    self.backgroundMusic:play(0, 1)
 end
 
 function GameScene:addNewElement(type, i, j, ...)

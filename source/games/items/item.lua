@@ -9,7 +9,7 @@ function Item:init(i, j, imageID)
 end
 
 function Item:createCollider()
-    self:setCollideRect(3, 3, 10, 10)
+    self:setCollideRect(6, 6, 4, 4)
 end
 
 function Item:pick(player)

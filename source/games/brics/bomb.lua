@@ -59,10 +59,10 @@ function Bomb:init(i, j, player)
     -- Sound
     local sound = playdate.sound.sampleplayer
     self.poseSound = sound.new('sounds/Place Bomb.wav')
-    self.poseSound:setVolume(0.6)
+    self.poseSound:setVolume(0.8)
 
     self.explodeSound = sound.new('sounds/Bomb Explodes.wav')
-    self.explodeSound:setVolume(0.6)
+    self.explodeSound:setVolume(1)
 
     self.poseSound:play(1, 1)
 end

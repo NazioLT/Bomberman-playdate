@@ -11,7 +11,7 @@ function Player:init(i, j, player)
 
     -- variables
     self.bombs = {}
-    self.speed = 3
+    self.speed = 2
     self.explosionRange = 1
     self.nbBombMax = 2
     self.dead = false

@@ -27,3 +27,26 @@ end
 function maskContainsGroup(mask, group)
     return hasbit(mask, bit(group))
 end
+
+function EmptyDoubleTable(iDim)
+    local table = { }
+
+    for i = 1, iDim, 1 do
+        table[i] = {}
+    end
+
+    return table
+end
+
+function EmptyTripleTable(iDim, jDim)
+    local table = { }
+
+    for i = 1, iDim, 1 do
+        table[i] = {}
+        for j = 1, jDim, 1 do
+            table[i][j] = {}
+        end
+    end
+
+    return table
+end

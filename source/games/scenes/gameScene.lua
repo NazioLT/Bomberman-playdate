@@ -33,19 +33,9 @@ function GameScene:enter()
     GameScene.super.enter(self)
 
     -- Init map data --
-    self.tiles = {}
-    self.walkableTiles = {}
-    for i = 1, 15, 1 do
-        self.walkableTiles[i] = {}
-    end
+    self.tiles = EmptyTripleTable(15, 15)
+    self.walkableTiles = EmptyDoubleTable(15)
     gameScene = self
-
-    for i = 1, 15, 1 do
-        self.tiles[i] = {}
-        for j = 1, 15, 1 do
-            self.tiles[i][j] = {}
-        end
-    end
 
     -- Build map
     math.randomseed(playdate.getSecondsSinceEpoch())

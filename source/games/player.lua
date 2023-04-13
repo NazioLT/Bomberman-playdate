@@ -250,6 +250,10 @@ function Player:getTile()
     return pixelToTile(self.x, self.y + 8)
 end
 
+function Player:getTileWithDelta(dX, dY)
+    return pixelToTile(self.x + dX, self.y + dY)
+end
+
 function Player:node()
     return AStarNode(self:getTile())
 end

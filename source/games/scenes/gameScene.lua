@@ -62,7 +62,7 @@ function GameScene:enter()
 
     -- Add Player
     player1 = Player(2, 2, P1)
-    player2 = Player(14, 13, P2)
+    player2 = Player(14, 14, P2)
 
     map = Map(self.tiles)
 

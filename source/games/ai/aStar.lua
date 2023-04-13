@@ -62,7 +62,7 @@ function AStar:aStarCompute(startNode, endNode)
         table.remove(self.openedNodes, table.indexOfElement(self.openedNodes, currentNode))
         table.insert(self.closedNodes, currentNode)
 
-        print("Check Node :" .. currentNode.i .. " / " .. currentNode.j)
+        -- print("Check Node :" .. currentNode.i .. " / " .. currentNode.j)
 
         if areTheSameNode(currentNode, endNode) then
             break

@@ -5,15 +5,15 @@ function Map:init(tiles)
 end
 
 function Map:getNodeAt(i, j)
-    print(i .. " " .. j)
+    -- print(i .. " " .. j)
 
     if i > #self.tiles or i < 1 or j < 1 or j > #self.tiles[1] then
-        print("fff")
+        -- print("fff")
         return nil
     end
 
     if self.tiles[i][j] == 1 then
-        print("vvv")
+        -- print("vvv")
         return nil
     end
 

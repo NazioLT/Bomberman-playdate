@@ -28,6 +28,17 @@ function Bomb:init(i, j, player)
         frames = { 29, 30, 31 }
     })
 
+    -- PLACING BOMB EXPLOSION ON MAP
+
+    map:addExplosionGroup(i, j)
+    print("Bomb " .. i .. "" .. j)
+    for n = -self.explosionRange, self.explosionRange, 1 do
+        if n ~= 0 then
+            map:addExplosionGroup(i + n, j)
+            map:addExplosionGroup(i, j + n)
+        end
+    end
+
     self:playAnimation()
 
     self.states.BombFast.onAnimationEndEvent = function(self)

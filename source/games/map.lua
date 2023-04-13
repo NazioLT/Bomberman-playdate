@@ -2,6 +2,90 @@ class("Map").extends()
 
 function Map:init(tiles)
     self.tiles = tiles;
+    self.explosionsTiles = { }
+
+    for i = 1, 15, 1 do
+        self.explosionsTiles[i] = { }
+        for j = 1, 15, 1 do
+            self.explosionsTiles[i][j] = 0
+        end
+    end
+end
+
+function Map:addExplosionGroup(i, j)
+    for x = -1, 1, 1 do
+        for y = -1, 1, 1 do
+           if math.abs(x) ~= math.abs(y) then
+                self:addDanger(i + x, j + y, 1)
+           end 
+        end
+    end
+
+    self:addDanger(i, j, 2)
+end
+
+function Map:removeExplosionGroup(i, j)
+    for x = -1, 1, 1 do
+        for y = -1, 1, 1 do
+           if math.abs(x) ~= math.abs(y) then
+                self:removeDanger(i + x, j + y, 1)
+           end 
+        end
+    end
+
+    self:removeDanger(i, j, 2)
+end
+
+function Map:addDanger(i, j, danger)
+    if self:isInMap(i, j) == false then
+        return
+    end
+    self.explosionsTiles[i][j] += danger
+end
+
+function Map:removeDanger(i, j, danger)
+    if self:isInMap(i, j) == false then
+        return
+    end
+    self.explosionsTiles[i][j] -= danger
+end
+
+function Map:hasBombAt(i, j)
+    if self:isInMap(i, j) == false then
+        return true
+    end
+
+    return self.explosionsTiles[i][j] > 0
+end
+
+function Map:searchFirstSafeCase(i, j)
+    if self:isInMap(i, j) == false then
+        return i, j
+    end
+
+    for n = 1, 15, 1 do
+        for x = -n, n, 1 do
+            for y = -n, n, 1 do
+                local cI, cJ = i + x, j + y
+
+                if self:isInMap(cI, cJ) then
+                    if self:hasBombAt(cI, cJ) == false and isWalkable(self.tiles[cI][cJ]) then
+                        return cI, cJ
+                    end
+                end
+            end
+        end
+    end
+
+    return i, j
+end
+
+function Map:isInMap(i, j)
+    if i < 1 or j < 1 then
+        return false
+    end
+
+    return i < #self.explosionsTiles and j < #self.explosionsTiles[i]
 end
 
 function Map:getNodeAt(i, j)

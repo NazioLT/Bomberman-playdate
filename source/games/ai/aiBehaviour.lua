@@ -14,6 +14,7 @@ function AIBehaviour:init(player, astar)
     AIBehaviour.super.init(self)
 
     self.frameToUpdate = 0
+    self.pathFinished = true
 
     self.controlledPlayer = player
     self.otherPlayer = player == player1 and player2 or player1
@@ -56,30 +57,67 @@ function AIBehaviour:updateBehaviour()
     self.frameToUpdate += 1
 
     self.lastDirection = self.controlledPlayer.lastDirection
+    local i, j = self:playerTileCoord()
 
-    -- Update path each X frames
-    if self.frameToUpdate > frameToUpdatePath then
-        self.frameToUpdate = 0
+    
+    -- print(targetSafe)
 
-        local success, path = self:pathToPlayer()
-        self.currentPathTargetID = #path
-        self.path = path
+    if self.pathIsValid and self.pathFinished == false and self.path ~= nil and #self.path > 0 then
+        local targetSafe = map:hasBombAt(self.path[1].i, self.path[1].j) == false
+        if targetSafe then
+            self:followPath()
+        end
     end
 
+    -- SE MET A L'ABRIS
+
+    local canBeTouchedByBomb = map:hasBombAt(i, j)
+
+    if canBeTouchedByBomb then
+        -- print("BOMB !")
+        local si, sj = map:searchFirstSafeCase(i, j)
+
+        if si ~= i or sj ~= j then -- safe case trouvée
+            print("SAFE : " .. si .. " " .. sj)
+            local success, path = self:pathTo(si, sj)
+            self.currentPathTargetID = #path
+            self.path = path
+            self.pathIsValid = success
+            self.pathFinished = false
+            return
+        end
+    end
+
+        -- -- Update path each X frames
+        -- if self.frameToUpdate > frameToUpdatePath then
+        --     self.frameToUpdate = 0
+    
+        --     local success, path = self:pathToPlayer()
+        --     self.currentPathTargetID = #path
+        --     self.path = path
+        --     self.canGoToPlayer = success
+        -- end
+    
+        -- if self.canGoToPlayer then
+        --     self:goToPlayer()
+        --    return 
+        -- end
+end
+
+function AIBehaviour:followPath()
     local target = self.path[self.currentPathTargetID]
     local i, j = self:playerTileCoord()
 
     if i == target.i and j == target.j then
         if 1 <= self.currentPathTargetID - 1 then
             self.currentPathTargetID -= 1
-            print("good")
+        else
+            self.pathFinished = true
         end
         return
     end
 
     local dI, dJ = target.i - i, target.j - j
-
-    print(dI .. " :: " ..dJ)
 
     local horizontalMove = math.abs(dI) >= math.abs(dJ)
     local normDX, normDY = dI >= 0 and 1 or -1, dJ >= 0 and 1 or -1
@@ -89,55 +127,6 @@ function AIBehaviour:updateBehaviour()
     else
         self.controlledPlayer:setDirection(self.controlledPlayer.moveInputs.x, normDY)
     end
-
-    -- -- if self.horizontalMove then
-    -- --     nodeX += self.normDX * 7
-    -- -- else 
-    -- --     nodeY += self.normDY * 7
-    -- -- end
-
-    -- local pX, pY = tileToPixel(self.controlledPlayer:getTile())
-    -- local dX, dY = nodeX - pX, nodeY - pY
-    -- local horizontalMove = math.abs(dX) >= math.abs(dY)
-
-    -- local changeDirection = horizontalMove == self.horizontalMove
-
-    -- self.horizontalMove = horizontalMove
-    -- local normDX, normDY = dX >= 0 and 1 or -1, dY >= 0 and 1 or -1
-
-    -- if changeDirection == false then
-    --     dX += self.normDX * 8
-    --     dY -= self.normDY * 8
-    -- end
-
-    -- print(dX .. " :: " ..dY)
-
-    -- if math.abs(dX) == 0 and math.abs(dY) == 0 then
-    --     print(#self.path .. "good" .. self.currentPathTargetID)
-    --     if 1 <= self.currentPathTargetID - 1 then
-    --         self.currentPathTargetID -= 1
-    --         print("good")
-    --     end
-    --     return
-    -- end
-
-    -- if self.horizontalMove then
-    --     self.controlledPlayer:setDirection(normDX, self.controlledPlayer.moveInputs.y)
-    -- else
-    --     self.controlledPlayer:setDirection(self.controlledPlayer.moveInputs.x, normDY)
-    -- end
-
-    -- if self:isAtTarget(pI, pJ, moveInputs.x, moveInputs.y) then
-    --     self.currentPathTargetID -= 1
-    --     print("Is Good")
-    --     return
-    -- end
-
-    -- if math.abs(dI) > math.abs(dJ) then
-    --     self.controlledPlayer:setDirection(dI > 0 and 1 or -1, self.controlledPlayer.moveInputs.y)
-    --     else
-    --     self.controlledPlayer:setDirection(self.controlledPlayer.moveInputs.x, dJ > 0 and 1 or -1)
-    -- end
 end
 
 function AIBehaviour:isAtTarget(x, y, inputX, inputY)
@@ -173,6 +162,12 @@ end
 
 function AIBehaviour:pathToPlayer()
     local path = self.astar:aStarCompute(self.controlledPlayer:node(), self.otherPlayer:node())
+    local sucess = path ~= nil 
+    return sucess, path
+end
+
+function AIBehaviour:pathTo(i, j)
+    local path = self.astar:aStarCompute(self.controlledPlayer:node(), AStarNode(i, j))
     local sucess = path ~= nil 
     return sucess, path
 end

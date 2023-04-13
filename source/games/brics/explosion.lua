@@ -34,6 +34,7 @@ function Explosion:init(i, j, animationShift)
     self:playAnimation()
 
     self.states.Explosion.onAnimationEndEvent = function(self)
+        map:removeExplosionGroup(self.i, self.j)
         self:remove()
     end
 

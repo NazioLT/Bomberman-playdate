@@ -12,8 +12,8 @@ function SimpleScene:init()
     menu = Noble.Menu.new(false, Noble.Text.ALIGN_CENTER, false, Graphics.kColorWhite, 4, 6, 0, Noble.Text.FONT_SMALL)
 
     menu:addItem('Ⓐ Start Game', function()
-        -- Noble.transition(GameScene, 0.5, Noble.TransitionType.SLIDE_OFF_LEFT)
-        Noble.transition(AStarScene, 0.5, Noble.TransitionType.SLIDE_OFF_LEFT)
+        Noble.transition(GameScene, 0.5, Noble.TransitionType.SLIDE_OFF_LEFT)
+        -- Noble.transition(AStarScene, 0.5, Noble.TransitionType.SLIDE_OFF_LEFT)
     end)
 
     SimpleScene.inputHandler = {

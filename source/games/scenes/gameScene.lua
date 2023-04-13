@@ -4,6 +4,7 @@ class('GameScene').extends(NobleScene)
 player1 = nil
 player2 = nil
 aiBehaviour = nil
+map = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 
@@ -42,27 +43,30 @@ function GameScene:enter()
 
     self:spawnBorders()
 
-    self:addNewElement(Empty, 2, 2)
-    self:addNewElement(Empty, 3, 2)
-    self:addNewElement(Empty, 2, 3)
+    -- self:addNewElement(Empty, 2, 2)
+    -- self:addNewElement(Empty, 3, 2)
+    -- self:addNewElement(Empty, 2, 3)
 
-    self:addNewElement(Empty, 14, 14)
-    self:addNewElement(Empty, 13, 14)
-    self:addNewElement(Empty, 14, 13)
+    -- self:addNewElement(Empty, 14, 14)
+    -- self:addNewElement(Empty, 13, 14)
+    -- self:addNewElement(Empty, 14, 13)
 
-    local bricCoords = self:spawnBrics()
+    -- local bricCoords = self:spawnBrics()
 
-    self:setFloors()
+    -- self:setFloors()
 
-    self:spawnItem(bricCoords, {
-        PowerItem, PowerItem, PowerItem, PowerItem,
-        BombItem, BombItem, BombItem, BombItem,
-        SpeedItem, SpeedItem, SpeedItem })
+    -- self:spawnItem(bricCoords, {
+    --     PowerItem, PowerItem, PowerItem, PowerItem,
+    --     BombItem, BombItem, BombItem, BombItem,
+    --     SpeedItem, SpeedItem, SpeedItem })
 
     -- Add Player
     player1 = Player(2, 2, P1)
     player2 = Player(14, 14, P2)
-    -- aiBehaviour = AIBehaviour(player2)
+
+    map = Map(self.tiles)
+
+    aiBehaviour = AIBehaviour(player2, AStar(map))
 
     -- Sounds
     local sound = playdate.sound.sampleplayer
@@ -81,6 +85,8 @@ end
 
 function GameScene:update()
     GameScene.super.update(self)
+
+    aiBehaviour:updateBehaviour()
 
     -- Update Walkable array
     for i = 1, 15, 1 do

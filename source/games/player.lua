@@ -171,7 +171,7 @@ function Player:dropBomb()
         end
     end
 
-    local i, j = pixelToTile(self.x, self.y + 8)
+    local i, j = self:getTile()
     self.bombs[#self.bombs + 1] = Bomb.new(i, j, self)
 end
 
@@ -190,4 +190,12 @@ function Player:kill()
     self.states.Die.onAnimationEndEvent = function(self)
         self:remove()
     end
+end
+
+function Player:getTile()
+    return pixelToTile(self.x, self.y + 8)
+end
+
+function Player:node()
+    return AStarNode(self:getTile())
 end

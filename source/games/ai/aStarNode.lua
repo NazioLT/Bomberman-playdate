@@ -1,8 +1,6 @@
 class('AStarNode').extends()
 
 function areTheSameNode(nodeA, nodeB)
-    print(nodeA == nil)
-    print(nodeB == nil)
     return nodeA.i == nodeB.i and nodeA.j == nodeB.j
 end
 

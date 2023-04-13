@@ -1,8 +1,7 @@
 class("Map").extends()
 
 function Map:init(tiles)
-    -- self.tiles = tiles;
-    self.tiles = EmptyDoubleTable(15, 15)
+    self.tiles = tiles;
 end
 
 function Map:getNodeAt(i, j)
@@ -18,7 +17,14 @@ function Map:getNodeAt(i, j)
         return nil
     end
 
-    return AStarNode(i, j)
+    local node = AStarNode(i, j)
+    local caseTable = self.tiles[i][j]
+
+    if isWalkable(caseTable) == false then
+        node.isObstacle = true
+    end
+
+    return node
 end
 
 function Map:getNeighbours(node)

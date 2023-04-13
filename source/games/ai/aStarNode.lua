@@ -12,6 +12,7 @@ function AStarNode:init(i, j)
     self.h = 0
     self.g = 0
     self.f = 0
+    self.isObstacle = false
     self.parent = nil
 end
 

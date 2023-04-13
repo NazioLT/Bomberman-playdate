@@ -62,20 +62,21 @@ function AStar:aStarCompute(startNode, endNode)
         table.remove(self.openedNodes, table.indexOfElement(self.openedNodes, currentNode))
         table.insert(self.closedNodes, currentNode)
 
-        print("Check Node :" .. currentNode.i .. " / " .. currentNode.j)
+        -- print("Check Node :" .. currentNode.i .. " / " .. currentNode.j)
 
         if areTheSameNode(currentNode, endNode) then
             break
         end
 
         local neighbours = self.map:getNeighbours(currentNode)
-        print("Neighbour count : " .. #neighbours)
+        -- print("Neighbour count : " .. #neighbours)
 
         for i = 1, #neighbours, 1 do
 
-            print("Check neighbour : " .. neighbours[i].i .. " : " .. neighbours[i].j)
+            -- print("Check neighbour : " .. neighbours[i].i .. " : " .. neighbours[i].j)
             -- TODO CHECK SI CLOSED OR OBSTACLE
-            if containsNode(self.closedNodes, neighbours[i]) then
+            if containsNode(self.closedNodes, neighbours[i]) or neighbours[i].isObstacle == true then -- or neighbours[i].isObstacle == true
+                -- print("skip : " .. neighbours[i].i .. " : " .. neighbours[i].j)
                 goto continue
             end
 
@@ -87,7 +88,7 @@ function AStar:aStarCompute(startNode, endNode)
 
                 if isNeighbourOpened == false then
                     table.insert(self.openedNodes, neighbours[i])
-                    print("opened : ", neighbours[i].i, neighbours[i].j)
+                    -- print("opened : ", neighbours[i].i, neighbours[i].j)
                 end
             end
 
@@ -98,7 +99,7 @@ function AStar:aStarCompute(startNode, endNode)
     local path = { }
     local currentNode = self.closedNodes[#self.closedNodes]
 
-    print("Finished computing : " .. currentNode.i)
+    -- print("Finished computing : " .. currentNode.i)
 
     while areTheSameNode(startNode, currentNode) == false and currentNode.parent ~= nil do
         table.insert(path, currentNode)

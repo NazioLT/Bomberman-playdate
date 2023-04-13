@@ -28,7 +28,7 @@ function maskContainsGroup(mask, group)
     return hasbit(mask, bit(group))
 end
 
-function EmptyDoubleTable(iDim)
+function EmptyTable(iDim)
     local table = { }
 
     for i = 1, iDim, 1 do
@@ -38,7 +38,7 @@ function EmptyDoubleTable(iDim)
     return table
 end
 
-function EmptyTripleTable(iDim, jDim)
+function EmptyDoubleTable(iDim, jDim)
     local table = { }
 
     for i = 1, iDim, 1 do

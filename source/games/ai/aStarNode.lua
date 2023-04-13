@@ -1,14 +1,8 @@
 class('AStarNode').extends()
 
--- aStarNodeState
--- {
---     Default = 0,
---     Open = 1,
---     Close = 2,
---     Obstacles = 3,
--- }
-
 function areTheSameNode(nodeA, nodeB)
+    print(nodeA == nil)
+    print(nodeB == nil)
     return nodeA.i == nodeB.i and nodeA.j == nodeB.j
 end
 
@@ -21,8 +15,11 @@ function AStarNode:init(i, j)
     self.parent = nil
 end
 
-function AStarNode:update()
-    
+function AStarNode:update(h, g, parent)
+    self.h = h
+    self.g = g
+    self.f = g + h
+    self.parent = parent
 end
 
 function AStarNode:isAtCoordinates(i, j)

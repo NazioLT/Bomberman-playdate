@@ -33,8 +33,8 @@ function GameScene:enter()
     GameScene.super.enter(self)
 
     -- Init map data --
-    self.tiles = EmptyTripleTable(15, 15)
-    self.walkableTiles = EmptyDoubleTable(15)
+    self.tiles = EmptyDoubleTable(15, 15)
+    self.walkableTiles = EmptyTable(15)
     gameScene = self
 
     -- Build map

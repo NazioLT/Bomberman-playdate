@@ -1,6 +1,6 @@
 class('AIBehaviour').extends(NobleSprite)
 
-local frameToUpdatePath = 10
+local frameToUpdatePath = 20
 
 states = 
 {
@@ -18,6 +18,8 @@ function AIBehaviour:init(player, astar)
     self.controlledPlayer = player
     self.otherPlayer = player == player1 and player2 or player1
     self.astar = astar
+
+    -- self.controlledPlayer:setCollideRect(13, 21, 6, 6)
 
     local sucess, path = self:pathToPlayer()
 

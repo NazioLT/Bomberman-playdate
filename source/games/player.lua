@@ -25,11 +25,11 @@ function Player:init(i, j, player)
     local tickSpeed = 10
 
     -- Colliders
-    self:setCollideRect(10, 18, 12, 12)
+    self:setCollideRect(8, 16, 16, 16)
 
     local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
     self:setGroups(playerCollisionGroup)
-    
+
     local playerCollisions = { collisionGroup.block, collisionGroup.bomb, collisionGroup.explosion, collisionGroup.item }
     self:setCollidesWithGroups(playerCollisions)
 
@@ -125,7 +125,6 @@ function Player:update()
     end
 
     local velocity = self.moveInputs * self.speed
-    self:moveWithCollisions(self.x + velocity.x, self.y + velocity.y)
 
     if velocity.y > 0 then
         self:changeState('RunBot', true)
@@ -145,9 +144,64 @@ function Player:update()
 
     if velocity.x ~= 0 and velocity.y ~= 0 and self.walkSound:isPlaying() == false then
         self.walkSound:play(1, 1)
-    else 
     end
 
+    if (self.moveInputs.x ~= 0 and self.moveInputs.y == 0)
+        or (self.moveInputs.y ~= 0 and self.moveInputs.x == 0) then
+        -- on crée un rect avec la position du player,
+        -- et la position du player +  un offset en fonction de playerInput
+        -- !!! pour l'instant notre rect à une aire de zéro,
+        -- car les deux points sont soit tous les deux sur l'axe x, ou sur l'axe y
+        local rect = getRect(
+            self.x,
+            self.y + 8,
+            self.x + self.moveInputs.x * 16,
+            self.y + 8 + self.moveInputs.y * 16
+        )
+
+        -- on ajoute ici 2 pixels de largeur et de hauteur à notre rect
+        -- pour prendre en compte une zone plus large
+        rect.x = rect.x - 1
+        rect.y = rect.y - 1
+        rect.w = rect.w + 2
+        rect.h = rect.h + 2
+
+
+        -- On detecte les sprite en collision avec notre rect
+        local collisions = playdate.graphics.sprite.querySpritesInRect(rect)
+
+        -- Si un des sprite en collision avec le player et du type Block
+        -- On set la variable isObstacleFront à true
+        local isObstacleFront = false
+        if collisions then
+            for i = 1, #collisions, 1 do
+                if collisions[i]:isa(Block) then
+                    isObstacleFront = true
+                    break
+                end
+            end
+        end
+
+
+        --si on n'a pas d'obstacle
+        if not isObstacleFront then
+            -- en fonction de si on se déplace horizontalement ou verticalement,
+            -- on force la position en y ou en x à notre grid
+            if self.lastDirection == "Left" or self.lastDirection == "Right" then
+                local i, j = self:getTile()
+                local _, y = tileToPixel(i, j)
+                self:moveTo(self.x, y - 8)
+            end
+            if self.lastDirection == "Top" or self.lastDirection == "Bot" then
+                local i, j = self:getTile()
+                local x, _ = tileToPixel(i, j)
+                self:moveTo(x, self.y)
+            end
+        end
+    end
+
+
+    self:moveWithCollisions(self.x + velocity.x, self.y + velocity.y)
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
 end
 
@@ -177,7 +231,7 @@ end
 
 function Player:removeBomb(bomb)
     local bombtable = self.bombs
-    table.remove(bombtable, table.indexOfElement(bombtable , bomb))
+    table.remove(bombtable, table.indexOfElement(bombtable, bomb))
 end
 
 function Player:kill()

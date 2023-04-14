@@ -36,6 +36,13 @@ function Map:removeExplosionGroup(i, j)
     self:removeDanger(i, j, 2)
 end
 
+function Map:getDanger(i, j)
+    if self:isInMap(i, j) == false then
+        return 0
+    end
+    return self.explosionsTiles[i][j]
+end
+
 function Map:addDanger(i, j, danger)
     if self:isInMap(i, j) == false then
         return

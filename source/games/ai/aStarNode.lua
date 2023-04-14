@@ -24,3 +24,7 @@ end
 function AStarNode:isAtCoordinates(i, j)
     return self.i == i and self.j ==j
 end
+
+function AStarNode:getFCost()
+    return self.f + map:getDanger(self.i, self.j)
+end

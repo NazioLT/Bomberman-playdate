@@ -31,7 +31,7 @@ function findLowestCost(openedNodes)
     for i = 2, #openedNodes, 1 do
         local node = openedNodes[i]
 
-        if node.f < result.f then
+        if node:getFCost() < result:getFCost() then
             result = node;
         end
 

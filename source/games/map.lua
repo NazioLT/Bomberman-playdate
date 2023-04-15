@@ -21,7 +21,6 @@ function Map:addExplosionGroup(i, j)
            end 
         end
     end
-
     self:addDanger(i, j, 2)
 end
 
@@ -33,7 +32,6 @@ function Map:removeExplosionGroup(i, j)
            end 
         end
     end
-
     self:removeDanger(i, j, 2)
 end
 
@@ -137,8 +135,12 @@ function Map:getNeighbours(node)
     return neighbours
 end
 
-function pickItem(item)
-    
+function Map:pickItem(item)
+    local index = table.indexOfElement(self.freeItems, item)
+
+    if index ~= nil then
+        table.remove(self.freeItems, index)
+    end
 end
 
 function Map:checkIfHasItem(i, j)

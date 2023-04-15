@@ -1,7 +1,5 @@
 class('AIBehaviour').extends(NobleSprite)
 
-local frameToUpdatePath = 20
-
 states = 
 {
     Idle = 1,
@@ -24,10 +22,7 @@ function AIBehaviour:init(player, astar)
     self.stateMachine = StateMachine()
     self.context = AIContext(player)
 
-    local sucess, path = self:pathToPlayer()
-
-    self.path = path
-    self.currentPathTargetID = #path
+    -- local sucess, path = self:pathToPlayer()
 
     self.horizontalMove = true
     self.normDX = 0
@@ -67,12 +62,10 @@ function AIBehaviour:updateBehaviour()
     self.stateMachine:update(self.context)
 
     if self.context.mustUpdatePath then
-        print("update")
         self:updatePath()
         return
     end
 
-    print("follow")
     self:followPath()
 
     -- self.frameToUpdate += 1
@@ -106,6 +99,13 @@ end
 function AIBehaviour:updatePath()
 
     local success, path = self:pathToNode(self.context.targetNode)
+
+    if path == nil then
+        self.context.currentPathTargetID = 1
+        self.context.path = path
+        return
+    end
+
     self.context.currentPathTargetID = #path
     self.context.path = path
 

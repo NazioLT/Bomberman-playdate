@@ -43,25 +43,25 @@ function GameScene:enter()
 
     self:spawnBorders()
 
-    -- self:addNewElement(Empty, 2, 2)
-    -- self:addNewElement(Empty, 3, 2)
-    -- self:addNewElement(Empty, 2, 3)
+    self:addNewElement(Empty, 2, 2)
+    self:addNewElement(Empty, 3, 2)
+    self:addNewElement(Empty, 2, 3)
 
-    -- self:addNewElement(Empty, 14, 14)
-    -- self:addNewElement(Empty, 13, 14)
-    -- self:addNewElement(Empty, 14, 13)
+    self:addNewElement(Empty, 14, 14)
+    self:addNewElement(Empty, 13, 14)
+    self:addNewElement(Empty, 14, 13)
 
-    -- local bricCoords = self:spawnBrics()
+    local bricCoords = self:spawnBrics()
 
     -- self:setFloors()
 
-    -- self:spawnItem(bricCoords, {
-    --     PowerItem, PowerItem, PowerItem, PowerItem,
-    --     BombItem, BombItem, BombItem, BombItem,
-    --     SpeedItem, SpeedItem, SpeedItem })
+    self:spawnItem(bricCoords, {
+        PowerItem, PowerItem, PowerItem, PowerItem,
+        BombItem, BombItem, BombItem, BombItem,
+        SpeedItem, SpeedItem, SpeedItem })
 
     -- Add Player
-    player1 = Player(10, 14, P1)
+    player1 = Player(2, 2, P1)
     player2 = Player(14, 14, P2)
 
     map = Map(self.tiles)
@@ -125,7 +125,7 @@ function GameScene:spawnBorders()
 end
 
 function GameScene:spawnBrics()
-    local bricProbability = 0.6
+    local bricProbability = 0.15
     local coords = {}
 
     for i = 2, 14, 1 do

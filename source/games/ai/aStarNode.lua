@@ -26,5 +26,7 @@ function AStarNode:isAtCoordinates(i, j)
 end
 
 function AStarNode:getFCost()
-    return self.f + map:getDanger(self.i, self.j)
+    local danger = map:getDanger(self.i, self.j)
+    local factor = danger > 1 and 5 or 1--CAR DANGER 1 EST PAS MORTEL
+    return self.f + (danger * factor)
 end

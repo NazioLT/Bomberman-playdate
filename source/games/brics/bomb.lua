@@ -8,6 +8,7 @@ function Bomb:init(i, j, player)
     Bomb.super.init(self, i, j, 5, true)
 
     self.player = player
+    self.explosions = { }
 
     self.explosionRange = player.explosionRange
 
@@ -31,7 +32,7 @@ function Bomb:init(i, j, player)
     -- PLACING BOMB EXPLOSION ON MAP
 
     map:addExplosionGroup(i, j)
-    print("Bomb " .. i .. "" .. j)
+    -- print("Bomb " .. i .. "" .. j)
     for n = -self.explosionRange, self.explosionRange, 1 do
         if n ~= 0 then
             map:addExplosionGroup(i + n, j)
@@ -120,7 +121,16 @@ function Bomb:explode()
         canLeft = self:tryPoseExplosion(canLeft, self.i - n, self.j, -1, 0, endAnim)
     end
 
+    map:removeExplosionGroup(self.i, self.j)
+    for n = -self.explosionRange, self.explosionRange, 1 do
+        if n ~= 0 then
+            map:removeExplosionGroup(self.i + n, self.j)
+            map:removeExplosionGroup(self.i, self.j + n)
+        end
+    end
+
     self.player:removeBomb(self)
+    map:removeExplosionGroup(self.i, self.j)
     self:remove()
 end
 

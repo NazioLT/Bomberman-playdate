@@ -14,5 +14,6 @@ end
 
 function Item:pick(player)
     print("Pick Item")
+    map:pickItem(self)
     self:remove()
 end

@@ -21,6 +21,9 @@ function AIBehaviour:init(player, astar)
     self.astar = astar
     self.currentState = ""
 
+    self.stateMachine = StateMachine()
+    self.context = AIContext(player)
+
     local sucess, path = self:pathToPlayer()
 
     self.path = path
@@ -37,23 +40,6 @@ function AIBehaviour:init(player, astar)
     end
 end
 
--- Gauche 4, 0 : ok / droite -4, 0 : ok / Haut 0, 12 : ok / Bas 0, 4 : ok
-function AIBehaviour:playerTileCoord()
-    if self.lastDirection == "Left" then
-        return self.controlledPlayer:getTileWithDelta(4, 0)
-    end
-
-    if self.lastDirection == "Right" then
-        return self.controlledPlayer:getTileWithDelta(-4, 0)  
-    end
-
-    if self.lastDirection == "Top" then
-        return self.controlledPlayer:getTileWithDelta(0, 12) 
-    end
-
-    return self.controlledPlayer:getTileWithDelta(0, 4)
-end
-
 function AIBehaviour:newState(i, j)
 
     -- SE MET A L'ABRIS
@@ -62,52 +48,50 @@ function AIBehaviour:newState(i, j)
         return "DODGE"
     end
 
+    if #map.freeItems > 1 then
+        local randomIndex = math.ceil((math.random() * #map.freeItems))
+
+        local success, path = self:pathTo(map.freeItems[randomIndex].i, map.freeItems[randomIndex].j)
+
+        if success then
+            self.path = path
+            return "GOTOITEM"
+        end
+    end
+
     return "IDLE"
 end
 
 function AIBehaviour:updateBehaviour()
-    self.frameToUpdate += 1
-    self.lastDirection = self.controlledPlayer.lastDirection
+    self.context:update()
+    self.stateMachine:update(self.context)
 
-    local i, j = self:playerTileCoord()
+    -- self.frameToUpdate += 1
+    -- local target = self.path[#self.path]
 
-    local newState = self:newState(i, j)
-    local isChangingState = self.currentState ~= newState
-    self.currentState = newState
+    -- local i, j = self:playerTileCoord()
 
-    if self.currentState == "IDLE" then
-        return
-    end
+    -- local newState = self:newState(i, j)
+    -- local isChangingState = self.currentState ~= newState
+    -- self.currentState = newState
 
+    -- print(newState)
+    -- print(target.i .. " " .. target.j)
 
-    if isChangingState == false and self.frameToUpdate < frameToUpdatePath then
-        self:followPath()
-        return;
-    end
-
-    self:updatePath(i, j)
-
-    -- if self.pathIsValid and self.pathFinished == false and self.path ~= nil and #self.path > 0 then
-    --     local targetSafe = map:hasBombAt(self.path[1].i, self.path[1].j) == false
-    --     if targetSafe then
-    --         self:followPath()
-    --     end
+    -- if self.currentState == "IDLE" then
+    --     return
     -- end
 
-        -- -- Update path each X frames
-        -- if self.frameToUpdate > frameToUpdatePath then
-        --     self.frameToUpdate = 0
-    
-        --     local success, path = self:pathToPlayer()
-        --     self.currentPathTargetID = #path
-        --     self.path = path
-        --     self.canGoToPlayer = success
-        -- end
-    
-        -- if self.canGoToPlayer then
-        --     self:goToPlayer()
-        --    return 
-        -- end
+    -- local isTargetSafe = map:getDanger(target.i, target.j) <= 1 -- 1 CAR 1 CEST BOMB A COTE
+
+    -- if isChangingState == false and self.frameToUpdate < frameToUpdatePath and isTargetSafe then
+    --     print("follow")
+    --     self:followPath()
+    --     return;
+    -- end
+
+    -- print("update")
+    -- self:updatePath(i, j)
 end
 
 function AIBehaviour:updatePath(i, j)
@@ -116,7 +100,6 @@ function AIBehaviour:updatePath(i, j)
     local success, path = self:pathTo(destI, destJ)
     self.currentPathTargetID = #path
     self.path = path
-    self.canGoToPlayer = success
 
     if success then
         self.frameToUpdate = 0
@@ -127,6 +110,10 @@ function AIBehaviour:newCurrentStateDestination(i, j)
     if self.currentState == "DODGE" then
         return map:searchFirstSafeCase(i, j)
     end
+
+    -- if self.currentState == "GOTOITEM" then
+    --     return map:searchFirstSafeCase(i, j)
+    -- end
 
     return i, j
 end

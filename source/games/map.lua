@@ -3,6 +3,7 @@ class("Map").extends()
 function Map:init(tiles)
     self.tiles = tiles;
     self.explosionsTiles = { }
+    self.freeItems = { }
 
     for i = 1, 15, 1 do
         self.explosionsTiles[i] = { }
@@ -134,4 +135,18 @@ function Map:getNeighbours(node)
     end
 
     return neighbours
+end
+
+function pickItem(item)
+    
+end
+
+function Map:checkIfHasItem(i, j)
+    local hasItem, item = gameScene:hasItem(i, j)
+
+    if hasItem == false then
+        return
+    end
+
+    self.freeItems[#self.freeItems+1] = item
 end

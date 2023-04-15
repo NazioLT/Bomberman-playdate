@@ -31,5 +31,6 @@ import "games/items/speedItem.lua"
 import "games/ai/aiBehaviour.lua"
 import "games/ai/aStar.lua"
 import "games/ai/aStarNode.lua"
+import "games/ai/stateMachine.lua"
 
 Noble.new(SimpleScene)

@@ -125,7 +125,7 @@ function GameScene:spawnBorders()
 end
 
 function GameScene:spawnBrics()
-    local bricProbability = 0.15
+    local bricProbability = 0.1
     local coords = {}
 
     for i = 2, 14, 1 do

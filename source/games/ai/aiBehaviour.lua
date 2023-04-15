@@ -20,7 +20,7 @@ function AIBehaviour:init(player, astar)
     self.currentState = ""
 
     self.stateMachine = StateMachine()
-    self.context = AIContext(player)
+    self.context = AIContext(player, self.otherPlayer)
 
     -- local sucess, path = self:pathToPlayer()
 
@@ -137,8 +137,6 @@ function AIBehaviour:followPath()
     if i == target.i and j == target.j then
         if 1 <= self.context.currentPathTargetID - 1 then
             self.context.currentPathTargetID -= 1
-        -- else
-        --     self.context.pathFinished = true
         end
         return
     end

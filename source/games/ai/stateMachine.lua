@@ -1,8 +1,8 @@
 class('AIContext').extends()
 
-function AIContext:init(controlledPlayer)
+function AIContext:init(controlledPlayer, otherPlayer)
     -- STATE MACHINE INPUTS
-    self.isTargetSafe = true
+    self.otherPlayer = otherPlayer
     self.targetNode = controlledPlayer:node()
     self.controlledPlayer = controlledPlayer
     self.controlledPlayerNode = controlledPlayer:node()
@@ -17,6 +17,7 @@ function AIContext:init(controlledPlayer)
     self.isChangingState = false
     self.mustUpdatePath = false
     self.currentItemTarget = nil
+    self.goingToPlayer = false
 end
 
 function AIContext:update()
@@ -67,6 +68,8 @@ function StateMachine:update(context)
         pathIsCompleted = 0 == context.currentPathNodeID
     end 
 
+    print(newState)
+
     if wantChangeDirection or pathIsValid == false or pathIsCompleted or context.timeToUpdate > frameToUpdatePath then
         local success, newTarget = self:getNewTarget(context)
         -- print(newTarget.i .. " d " .. newTarget.j)
@@ -77,19 +80,48 @@ function StateMachine:update(context)
             context.timeToUpdate = 0
         end
     end
+
+    self:updateState(context)
+end
+
+function StateMachine:updateState(context)
+    if self.state == "DODGE" then
+        return
+    end
+
+    if self.state == "GOTOITEM" then
+        return
+    end
+
+    if self.state == "GOTOPLAYER" then
+        local distToPlayer = getNodeManhattanDistance(context.otherPlayer:node(), context.controlledPlayerNode)
+        if distToPlayer < 5 then
+            context.controlledPlayer:dropBomb()
+        end
+
+        return
+    end
 end
 
 function StateMachine:getNewTarget(context)
     if self.state == "DODGE" then
+        context.goingToPlayer = false
+
         local newTarget = AStarNode(map:searchFirstSafeCase(context.controlledPlayerNode.i,context.controlledPlayerNode.j))
         return newTarget ~= context.targetNode, newTarget
     end
 
     if self.state == "GOTOITEM" then
+        context.goingToPlayer = false
+
         local rndm = math.ceil(math.random() * #map.freeItems)
         local randomItem = map.freeItems[rndm]
         context.currentItemTarget = randomItem
         return true, AStarNode(randomItem.i, randomItem.j)
+    end
+
+    if self.state == "GOTOPLAYER" then
+        return true, context.otherPlayer:node()
     end
 
     return false, context.targetNode
@@ -103,6 +135,14 @@ function StateMachine:getState(context)
     if #map.freeItems > 0 then
         return "GOTOITEM"
     end
+
+    local distToPlayer = getNodeManhattanDistance(context.otherPlayer:node(), context.controlledPlayerNode)
+
+    if distToPlayer <  10 then
+        return "GOTOPLAYER"
+    end
+
+
 
     return "IDLE"
 end

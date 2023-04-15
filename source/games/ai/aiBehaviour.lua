@@ -66,6 +66,15 @@ function AIBehaviour:updateBehaviour()
     self.context:update()
     self.stateMachine:update(self.context)
 
+    if self.context.mustUpdatePath then
+        print("update")
+        self:updatePath()
+        return
+    end
+
+    print("follow")
+    self:followPath()
+
     -- self.frameToUpdate += 1
     -- local target = self.path[#self.path]
 
@@ -94,12 +103,11 @@ function AIBehaviour:updateBehaviour()
     -- self:updatePath(i, j)
 end
 
-function AIBehaviour:updatePath(i, j)
-    local destI, destJ = self:newCurrentStateDestination(i, j)
+function AIBehaviour:updatePath()
 
-    local success, path = self:pathTo(destI, destJ)
-    self.currentPathTargetID = #path
-    self.path = path
+    local success, path = self:pathToNode(self.context.targetNode)
+    self.context.currentPathTargetID = #path
+    self.context.path = path
 
     if success then
         self.frameToUpdate = 0
@@ -119,14 +127,18 @@ function AIBehaviour:newCurrentStateDestination(i, j)
 end
 
 function AIBehaviour:followPath()
-    local target = self.path[self.currentPathTargetID]
-    local i, j = self:playerTileCoord()
+    if self.context.path == nil or #self.context.path < 1 then
+        return
+    end
+
+    local target = self.context.path[self.context.currentPathTargetID]
+    local i, j = self.context.controlledPlayerNode.i, self.context.controlledPlayerNode.j
 
     if i == target.i and j == target.j then
-        if 1 <= self.currentPathTargetID - 1 then
-            self.currentPathTargetID -= 1
-        else
-            self.pathFinished = true
+        if 1 <= self.context.currentPathTargetID - 1 then
+            self.context.currentPathTargetID -= 1
+        -- else
+        --     self.context.pathFinished = true
         end
         return
     end

@@ -14,9 +14,12 @@ function AIContext:init(controlledPlayer)
     self.path = nil
     self.currentPathNodeID = 1
     self.isChangingState = false
+    self.mustUpdatePath = false
 end
 
 function AIContext:update()
+    self.mustUpdatePath = false
+
     self.lastDirection = self.controlledPlayer.lastDirection
     self.controlledPlayerNode = AStarNode(self:playerTileCoord())
 
@@ -30,11 +33,11 @@ function AIContext:playerTileCoord()
     end
 
     if self.lastDirection == "Right" then
-        return self.controlledPlayer:getTileWithDelta(-4, 0)  
+        return self.controlledPlayer:getTileWithDelta(-4, 0)
     end
 
     if self.lastDirection == "Top" then
-        return self.controlledPlayer:getTileWithDelta(0, 12) 
+        return self.controlledPlayer:getTileWithDelta(0, 12)
     end
 
     return self.controlledPlayer:getTileWithDelta(0, 4)
@@ -47,7 +50,33 @@ function StateMachine:init()
 end
 
 function StateMachine:update(context)
-    print(self:getState(context))
+    local newState = self:getState(context)
+    context.isChangingState = newState ~= self.state
+    self.state = newState
+
+    local wantChangeDirection = context.isChangingState and newState ~= "IDLE"
+    local pathIsValid = context.path ~= nil and #context.path >= 1
+
+    print(self.state)
+
+    if wantChangeDirection or pathIsValid == false then
+        local success, newTarget = self:getNewTarget(context)
+
+        if success then
+            context.targetNode = newTarget
+            context.mustUpdatePath = true
+        end
+    end
+end
+
+function StateMachine:getNewTarget(context)
+    if self.state == "DODGE" then
+        local newTarget = AStarNode(map:searchFirstSafeCase(context.controlledPlayerNode.i,
+        context.controlledPlayerNode.j))
+        return newTarget ~= context.targetNode, newTarget
+    end
+
+    return false, context.targetNode
 end
 
 function StateMachine:getState(context)

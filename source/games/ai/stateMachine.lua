@@ -72,7 +72,6 @@ function StateMachine:update(context)
 
     if wantChangeDirection or pathIsValid == false or pathIsCompleted or context.timeToUpdate > frameToUpdatePath then
         local success, newTarget = self:getNewTarget(context)
-        -- print(newTarget.i .. " d " .. newTarget.j)
 
         if success then
             context.targetNode = newTarget
@@ -124,6 +123,11 @@ function StateMachine:getNewTarget(context)
         return true, context.otherPlayer:node()
     end
 
+    if self.state == "BREAKBLOCK" then
+        local success, bricI, bricJ = gameScene:randomBric()
+        return success, AStarNode(bricI, bricJ)
+    end
+
     return false, context.targetNode
 end
 
@@ -142,7 +146,7 @@ function StateMachine:getState(context)
         return "GOTOPLAYER"
     end
 
+    return "BREAKBLOCK"
 
-
-    return "IDLE"
+    -- return "IDLE"
 end

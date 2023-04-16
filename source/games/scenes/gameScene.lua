@@ -51,14 +51,16 @@ function GameScene:enter()
     self:addNewElement(Empty, 13, 14)
     self:addNewElement(Empty, 14, 13)
 
-    local bricCoords = self:spawnBrics()
+    self.bricCoords = self:spawnBrics()
 
     -- self:setFloors()
 
-    self:spawnItem(bricCoords, {
+    self.bricCoords = self:spawnItem(self.bricCoords, {
         PowerItem, PowerItem, PowerItem, PowerItem,
         BombItem, BombItem, BombItem, BombItem,
         SpeedItem, SpeedItem, SpeedItem })
+
+    print(#self.bricCoords)
 
     -- Add Player
     player1 = Player(2, 2, P1)
@@ -98,13 +100,69 @@ end
 
 -- Shortcuts methods --
 
+function GameScene:randomBric()
+    print(#self.bricCoords)
+    if self.bricCoords == nil or #self.bricCoords < 1 then
+        print("dnt works")
+        return false, 2, 2
+    end
+
+    local index = math.random(1, #self.bricCoords)
+    local bric = self.bricCoords[index]
+
+    if bric == nil then
+        print("pijf")
+        return false, 2, 2
+    end
+
+    if bric.i == nil or bric.j == nil then
+        print("^pki")
+        return false, 2, 2
+    end
+
+    print("Works")
+
+    return true, bric.i, bric.j
+end
+
+function GameScene:breakBric(i, j)
+    print("Break")
+    for n = 1, #self.bricCoords, 1 do
+        local bricCoord = self.bricCoords[n]
+        print(bricCoord.i .. " " .. bricCoord.j)
+        if bricCoord.i == i and bricCoord.j == j then
+            table.remove(self.bricCoords, n)
+            return true
+        end
+    end
+
+    return false
+end
+
 function GameScene:spawnItem(coordinates, Types)
+    local itemTable = {}
+
+    print(#coordinates)
+
     for i = 1, #Types, 1 do
+        if #coordinates == 0 then
+            return
+        end
         local index = math.random(1, #coordinates)
         local coords = coordinates[index]
-        self:addNewElement(Types[i], coords[1], coords[2])
+        self:addNewElement(Types[i], coords.i, coords.j)
         table.remove(coordinates, index)
+        itemTable[#itemTable + 1] = coords
     end
+
+    -- REMET LES COORD DANS LA LISTE
+    for i = 1, #coordinates, 1 do
+        itemTable[#itemTable + 1] = coordinates[i]
+    end
+
+    print(#itemTable)
+
+    return itemTable
 end
 
 function GameScene:spawnBorders()
@@ -125,7 +183,7 @@ function GameScene:spawnBorders()
 end
 
 function GameScene:spawnBrics()
-    local bricProbability = 0.1
+    local bricProbability = 0.3
     local coords = {}
 
     for i = 2, 14, 1 do
@@ -137,7 +195,9 @@ function GameScene:spawnBrics()
                 and hasTypeInTable(table, Empty) == false
             then
                 self:addNewElement(Bric, i, j)
-                local coord = { i, j }
+                local coord = { }
+                coord.i = i
+                coord.j = j
                 coords[#coords + 1] = coord
             end
         end

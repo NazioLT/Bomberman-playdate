@@ -23,6 +23,7 @@ function Bric:breakBlock()
 
     self.states.Destroy.onAnimationEndEvent = function(self)
         gameScene:remove(self.i, self.j, self)
+        gameScene:breakBric(self.i, self.j)
         self:remove()
         map:checkIfHasItem(self.i, self.j)
     end

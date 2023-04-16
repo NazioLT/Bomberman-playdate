@@ -22,7 +22,7 @@ function Map:addExplosionGroup(i, j)
            end 
         end
     end
-    self:addDanger(i, j, 15)
+    self:addDanger(i, j, 16)
 end
 
 function Map:removeExplosionGroup(i, j)
@@ -33,7 +33,7 @@ function Map:removeExplosionGroup(i, j)
            end 
         end
     end
-    self:removeDanger(i, j, 15)
+    self:removeDanger(i, j, 16)
 end
 
 function Map:getDanger(i, j)

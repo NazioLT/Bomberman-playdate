@@ -5,6 +5,7 @@ player1 = nil
 player2 = nil
 aiBehaviour = nil
 map = nil
+invertedCircle = nil
 
 GameScene.baseColor = Graphics.kColorWhite
 
@@ -37,6 +38,8 @@ function GameScene:enter()
     self.tiles = EmptyDoubleTable(15, 15)
     self.walkableTiles = EmptyTable(15)
     gameScene = self
+
+    invertedCircle = InvertedCircle()
 
     -- Build map
     math.randomseed(playdate.getSecondsSinceEpoch())

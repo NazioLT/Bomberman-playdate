@@ -170,7 +170,9 @@ function StateMachine:getState(context)
         return "GOTOPLAYER"
     end
 
-    return "BREAKBLOCK"
-
-    -- return "IDLE"
+    if context.controlledPlayer:hasBombInReserve() then
+        return "BREAKBLOCK"
+    end
+    
+    return "IDLE"
 end

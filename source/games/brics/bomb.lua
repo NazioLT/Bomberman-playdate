@@ -110,6 +110,10 @@ function Bomb:explode()
     print("Explode " .. self.i .. " : " .. self.j)
     self.explodeSound:play(1, 1)
 
+    local screenShaker = ScreenShaker()
+    screenShaker:start(0.8, 3, playdate.easingFunctions.inOutCubic)
+    invertedCircle:addBomb(self.explosionRange, self.i, self.j)
+
     Explosion(self.i, self.j, explosionAnim.cross)
 
     for n = 1, self.explosionRange, 1 do

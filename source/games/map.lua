@@ -73,19 +73,36 @@ function Map:searchFirstSafeCase(i, j, AI)
         return i, j
     end
 
-    -- TRES SAFE
-    for n = 1, 15, 1 do
+    local hasSecondSolution, secondSolution
+
+    for n = 1, 5, 1 do
         for x = -n, n, 1 do
             for y = -n, n, 1 do
                 local cI, cJ = i + x, j + y
 
                 if self:isInMap(cI, cJ) then
-                    if self:getDanger(cI, cJ) == 0 and isWalkable(self.tiles[cI][cJ]) then
-                        local succes, path = AI:pathTo(cI, cJ)
+                    if isWalkable(self.tiles[cI][cJ]) then
+                        local danger = self:getDanger(cI, cJ)
 
-                        if succes then
-                            print("SAFE : " .. cI .. " " .. cJ)
-                            return cI, cJ
+                        if danger == 0 then
+                            local succes, path = AI:pathTo(cI, cJ)
+    
+                            if succes then
+                                print("SAFE : " .. cI .. " " .. cJ)
+                                return cI, cJ
+                            end
+                        end
+
+                        
+                        if hasSecondSolution == false and danger < 15 then
+                            local succes, path = AI:pathTo(cI, cJ)
+    
+                            if succes then
+                                hasSecondSolution = true
+                                secondSolution.i = cI
+                                secondSolution.j = cJ
+                            end
+                            
                         end
                     end
                 end
@@ -93,24 +110,8 @@ function Map:searchFirstSafeCase(i, j, AI)
         end
     end
 
-    -- SINON JUSTE SAFE
-    for n = 1, 15, 1 do
-        for x = -n, n, 1 do
-            for y = -n, n, 1 do
-                local cI, cJ = i + x, j + y
-
-                if self:isInMap(cI, cJ) then
-                    if self:getDanger(cI, cJ) < 15 and isWalkable(self.tiles[cI][cJ]) then
-                        local succes, path = AI:pathTo(cI, cJ)
-
-                        if succes then
-                            print("SAFE MOYEN : " .. cI .. " " .. cJ)
-                            return cI, cJ
-                        end
-                    end
-                end
-            end
-        end
+    if hasSecondSolution then
+        return secondSolution.i, secondSolution.j
     end
 
     return i, j

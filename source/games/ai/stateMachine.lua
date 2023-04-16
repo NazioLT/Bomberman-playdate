@@ -10,6 +10,7 @@ function AIContext:init(controlledPlayer, otherPlayer)
     self.isTargetSafe = true
     self.isCurrentCaseSafe = true
     self.timeToUpdate = 0
+    self.stillSafe = 0
 
     -- STATE MACHINE OUTPUTS
     self.path = nil
@@ -28,7 +29,7 @@ function AIContext:update()
     self.lastDirection = self.controlledPlayer.lastDirection
     self.controlledPlayerNode = AStarNode(self:playerTileCoord())
 
-    print(map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j))
+    -- print(map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j))
     self.isCurrentCaseSafe = map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j) <= 14 
 
 
@@ -150,6 +151,10 @@ function StateMachine:getState(context)
         return "DODGE"
     end
 
+    if context.isCurrentCaseSafe and context.controlledPlayer:hasBombInReserve() == false then
+        return "RECHARGING"
+    end
+
     if #map.freeItems > 0 then
         local rndm = math.ceil(math.random() * #map.freeItems)
         local randomItem = map.freeItems[rndm]
@@ -159,10 +164,6 @@ function StateMachine:getState(context)
         if success then
             return "GOTOITEM"
         end
-    end
-
-    if context.isCurrentCaseSafe and context.controlledPlayer:hasBombInReserve() == false then
-        return "RECHARGING"
     end
 
     local distToPlayer = getNodeManhattanDistance(context.otherPlayer:node(), context.controlledPlayerNode)

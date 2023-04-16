@@ -113,7 +113,7 @@ function Bomb:explode()
     self.explodeSound:play(1, 1)
     gameScene:remove(self.i, self.j, self)
 
-    local screenShaker = ScreenShaker()
+    local screenShaker = ScreenShaker(self.explosionRange)
     screenShaker:start(0.8, 3, playdate.easingFunctions.inOutCubic)
     invertedCircle:addBomb(self.explosionRange, self.i, self.j)
 

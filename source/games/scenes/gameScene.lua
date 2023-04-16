@@ -63,7 +63,7 @@ function GameScene:enter()
         BombItem, BombItem, BombItem, BombItem,
         SpeedItem, SpeedItem, SpeedItem })
 
-    print(#self.bricCoords)
+    -- print(#self.bricCoords)
 
     -- Add Player
     player1 = Player(2, 2, P1)
@@ -71,7 +71,7 @@ function GameScene:enter()
 
     map = Map(self.tiles)
 
-    -- aiBehaviour = AIBehaviour(player2, AStar(map))
+    aiBehaviour = AIBehaviour(player2, AStar(map))
 
     -- Sounds
     local sound = playdate.sound.sampleplayer
@@ -114,9 +114,8 @@ end
 -- Shortcuts methods --
 
 function GameScene:randomBric()
-    print(#self.bricCoords)
+    -- print(#self.bricCoords)
     if self.bricCoords == nil or #self.bricCoords < 1 then
-        print("dnt works")
         return false, 2, 2
     end
 
@@ -124,16 +123,12 @@ function GameScene:randomBric()
     local bric = self.bricCoords[index]
 
     if bric == nil then
-        print("pijf")
         return false, 2, 2
     end
 
     if bric.i == nil or bric.j == nil then
-        print("^pki")
         return false, 2, 2
     end
-
-    print("Works")
 
     return true, bric.i, bric.j
 end
@@ -161,10 +156,8 @@ function GameScene:neighbour(i, j)
 end
 
 function GameScene:breakBric(i, j)
-    print("Break")
     for n = 1, #self.bricCoords, 1 do
         local bricCoord = self.bricCoords[n]
-        print(bricCoord.i .. " " .. bricCoord.j)
         if bricCoord.i == i and bricCoord.j == j then
             table.remove(self.bricCoords, n)
             return true
@@ -195,7 +188,7 @@ function GameScene:spawnItem(coordinates, Types)
         itemTable[#itemTable + 1] = coordinates[i]
     end
 
-    print(#itemTable)
+    -- print(#itemTable)
 
     return itemTable
 end
@@ -218,7 +211,7 @@ function GameScene:spawnBorders()
 end
 
 function GameScene:spawnBrics()
-    local bricProbability = 0.2
+    local bricProbability = 0.4
     local coords = {}
 
     for i = 2, 14, 1 do

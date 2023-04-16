@@ -9,7 +9,13 @@ function Item:init(i, j, imageID)
 end
 
 function Item:createCollider()
-    self:setCollideRect(4, 4, 8, 8)
+    self:setCollideRect(3, 3, 10, 10)
+end
+
+function Item:tryPick(player)
+    if gameScene:hasTypeAtCoordinates(self.i, self.j, Bric) == false then
+        self:pick(player)
+    end
 end
 
 function Item:pick(player)

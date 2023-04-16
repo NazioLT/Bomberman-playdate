@@ -1,7 +1,8 @@
 class('ScreenShaker').extends(NobleSprite)
 
-function ScreenShaker:init()
+function ScreenShaker:init(force)
     ScreenShaker.super.init(self)
+    self.force = force
     self:add()
 end
 
@@ -15,6 +16,6 @@ function ScreenShaker:update()
         playdate.display.setOffset(0, 0)
         return
     end
-    local factor = self.animator:currentValue()
+    local factor = self.animator:currentValue() * self.force
     playdate.display.setOffset(math.random() * factor, math.random() * factor)
 end

@@ -25,7 +25,7 @@ function Player:init(i, j, player)
     local tickSpeed = 10
 
     -- Colliders
-    self:setCollideRect(11, 19, 10, 10)
+    self:setCollideRect(14, 22, 6, 6)
 
     local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
     self:setGroups(playerCollisionGroup)
@@ -101,7 +101,7 @@ function Player:collisionResponse(other)
     end
 
     if maskContainsGroup(other:getGroupMask(), collisionGroup.item) then
-        other:pick(self)
+        other:tryPick(self)
         return playdate.graphics.sprite.kCollisionTypeOverlap
     end
 
@@ -160,12 +160,12 @@ function Player:update()
             self.y + 8 + self.moveInputs.y * 16
         )
 
-        -- on ajoute ici 2 pixels de largeur et de hauteur à notre rect
+        -- on ajoute ici 6 pixels de largeur et de hauteur à notre rect
         -- pour prendre en compte une zone plus large
-        rect.x = rect.x - 1
-        rect.y = rect.y - 1
-        rect.w = rect.w + 2
-        rect.h = rect.h + 2
+        rect.x = rect.x - 3
+        rect.y = rect.y - 3
+        rect.w = rect.w + 6
+        rect.h = rect.h + 6
 
 
         -- On detecte les sprite en collision avec notre rect

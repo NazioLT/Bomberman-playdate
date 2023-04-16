@@ -68,6 +68,10 @@ function AStar:aStarCompute(startNode, endNode)
             break
         end
 
+        if currentNode:getFCost() > 999 then -- EN TRAIN D'EXPLOSER
+            goto skip
+        end
+
         local neighbours = self.map:getNeighbours(currentNode)
         -- print("Neighbour count : " .. #neighbours)
 
@@ -94,6 +98,8 @@ function AStar:aStarCompute(startNode, endNode)
 
             ::continue::
         end
+
+        ::skip::
     end
 
     local path = { }

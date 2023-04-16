@@ -19,7 +19,7 @@ function AIBehaviour:init(player, astar)
     self.astar = astar
     self.currentState = ""
 
-    self.stateMachine = StateMachine()
+    self.stateMachine = StateMachine(self)
     self.context = AIContext(player, self.otherPlayer)
 
     -- local sucess, path = self:pathToPlayer()
@@ -28,11 +28,7 @@ function AIBehaviour:init(player, astar)
     self.normDX = 0
     self.normDY = 0
 
-    if sucess then
-        print("Success " .. #path)
-    else 
-        print("Failure")
-    end
+    map.AI[#map.AI+1] = self
 end
 
 function AIBehaviour:newState(i, j)
@@ -67,33 +63,11 @@ function AIBehaviour:updateBehaviour()
     end
 
     self:followPath()
+end
 
-    -- self.frameToUpdate += 1
-    -- local target = self.path[#self.path]
-
-    -- local i, j = self:playerTileCoord()
-
-    -- local newState = self:newState(i, j)
-    -- local isChangingState = self.currentState ~= newState
-    -- self.currentState = newState
-
-    -- print(newState)
-    -- print(target.i .. " " .. target.j)
-
-    -- if self.currentState == "IDLE" then
-    --     return
-    -- end
-
-    -- local isTargetSafe = map:getDanger(target.i, target.j) <= 1 -- 1 CAR 1 CEST BOMB A COTE
-
-    -- if isChangingState == false and self.frameToUpdate < frameToUpdatePath and isTargetSafe then
-    --     print("follow")
-    --     self:followPath()
-    --     return;
-    -- end
-
-    -- print("update")
-    -- self:updatePath(i, j)
+function AIBehaviour:checkIfCanGoToPlayer()
+    local sucess, path = self:pathToPlayer()
+    self.context.canGoToPlayer = sucess
 end
 
 function AIBehaviour:updatePath()

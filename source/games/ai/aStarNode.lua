@@ -27,6 +27,6 @@ end
 
 function AStarNode:getFCost()
     local danger = map:getDanger(self.i, self.j)
-    local factor = danger > 1 and 5 or 1--CAR DANGER 1 EST PAS MORTEL
+    local factor = danger > 14 and 5 or 1--CAR DANGER 1 EST PAS MORTEL
     return self.f + (danger * factor)
 end

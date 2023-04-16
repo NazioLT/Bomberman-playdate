@@ -4,6 +4,7 @@ function Map:init(tiles)
     self.tiles = tiles;
     self.explosionsTiles = { }
     self.freeItems = { }
+    self.AI = { }
 
     for i = 1, 15, 1 do
         self.explosionsTiles[i] = { }
@@ -21,7 +22,7 @@ function Map:addExplosionGroup(i, j)
            end 
         end
     end
-    self:addDanger(i, j, 2)
+    self:addDanger(i, j, 15)
 end
 
 function Map:removeExplosionGroup(i, j)
@@ -32,7 +33,7 @@ function Map:removeExplosionGroup(i, j)
            end 
         end
     end
-    self:removeDanger(i, j, 2)
+    self:removeDanger(i, j, 15)
 end
 
 function Map:getDanger(i, j)
@@ -61,22 +62,48 @@ function Map:hasBombAt(i, j)
         return true
     end
 
-    return self.explosionsTiles[i][j] > 0
+    return self.explosionsTiles[i][j] > 14
 end
 
-function Map:searchFirstSafeCase(i, j)
+function Map:searchFirstSafeCase(i, j, AI)
     if self:isInMap(i, j) == false then
         return i, j
     end
 
+    -- TRES SAFE
     for n = 1, 15, 1 do
         for x = -n, n, 1 do
             for y = -n, n, 1 do
                 local cI, cJ = i + x, j + y
 
                 if self:isInMap(cI, cJ) then
-                    if self:hasBombAt(cI, cJ) == false and isWalkable(self.tiles[cI][cJ]) then
-                        return cI, cJ
+                    if self:getDanger(cI, cJ) < 5 and isWalkable(self.tiles[cI][cJ]) then
+                        local succes, path = AI:pathTo(cI, cJ)
+
+                        if succes then
+                            print("SAFE : " .. cI .. " " .. cJ)
+                            return cI, cJ
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    -- SINON JUSTE SAFE
+    for n = 1, 15, 1 do
+        for x = -n, n, 1 do
+            for y = -n, n, 1 do
+                local cI, cJ = i + x, j + y
+
+                if self:isInMap(cI, cJ) then
+                    if self:getDanger(cI, cJ) < 30 and isWalkable(self.tiles[cI][cJ]) then
+                        local succes, path = AI:pathTo(cI, cJ)
+
+                        if succes then
+                            print("SAFE MOYEN : " .. cI .. " " .. cJ)
+                            return cI, cJ
+                        end
                     end
                 end
             end
@@ -84,6 +111,23 @@ function Map:searchFirstSafeCase(i, j)
     end
 
     return i, j
+end
+
+function Map:nextToBreakable(i, j)
+    if gameScene:hasTypeAtCoordinates(i + 1, j, Bric) or 
+    gameScene:hasTypeAtCoordinates(i - 1, j, Bric) or
+    gameScene:hasTypeAtCoordinates(i, j + 1, Bric) or
+    gameScene:hasTypeAtCoordinates(i, j - 1, Bric) then
+       return true 
+    end
+
+    return false
+end
+
+function Map:checkAIPlayerPath()
+    for i = 1, #self.AI, 1 do
+        self.AI[i]:checkIfCanGoToPlayer()
+    end
 end
 
 function Map:isInMap(i, j)

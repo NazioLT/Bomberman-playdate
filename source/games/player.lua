@@ -13,7 +13,7 @@ function Player:init(i, j, player)
     self.bombs = {}
     self.speed = 2
     self.explosionRange = 1
-    self.nbBombMax = 2
+    self.nbBombMax = 1
     self.dead = false
     self.playerNumber = player
 
@@ -25,7 +25,7 @@ function Player:init(i, j, player)
     local tickSpeed = 10
 
     -- Colliders
-    self:setCollideRect(8, 16, 16, 16)
+    self:setCollideRect(12, 20, 8, 8)
 
     local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
     self:setGroups(playerCollisionGroup)
@@ -146,6 +146,7 @@ function Player:update()
         self.walkSound:play(1, 1)
     end
 
+    -- Code By François Dervaux
     if (self.moveInputs.x ~= 0 and self.moveInputs.y == 0)
         or (self.moveInputs.y ~= 0 and self.moveInputs.x == 0) then
         -- on crée un rect avec la position du player,
@@ -199,10 +200,15 @@ function Player:update()
             end
         end
     end
+    -- Code End
 
 
     self:moveWithCollisions(self.x + velocity.x, self.y + velocity.y)
     self.moveInputs = playdate.geometry.vector2D.new(0, 0)
+end
+
+function Player:hasBombInReserve()
+    return self.nbBombMax > #self.bombs
 end
 
 function Player:dropBomb()
@@ -211,7 +217,7 @@ function Player:dropBomb()
         return
     end
 
-    if self.nbBombMax <= #self.bombs then
+    if self:hasBombInReserve() == false then
         return
     end
 

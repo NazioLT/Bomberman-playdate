@@ -125,6 +125,28 @@ function GameScene:randomBric()
     return true, bric.i, bric.j
 end
 
+function GameScene:neighbour(i, j)
+    if i <= 0 or j <= 0 or i > 15 or j > 15 then
+        return i, j
+    end
+
+    local rndm = math.random(4)
+
+    if rndm == 1 then
+        return i + 1, j
+    end
+
+    if rndm == 2 then
+        return i - 1, j
+    end
+
+    if rndm == 3 then
+        return i, j + 1
+    end
+
+    return i, j - 1
+end
+
 function GameScene:breakBric(i, j)
     print("Break")
     for n = 1, #self.bricCoords, 1 do
@@ -183,7 +205,7 @@ function GameScene:spawnBorders()
 end
 
 function GameScene:spawnBrics()
-    local bricProbability = 0.3
+    local bricProbability = 0.2
     local coords = {}
 
     for i = 2, 14, 1 do

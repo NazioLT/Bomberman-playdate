@@ -18,6 +18,8 @@ function AIContext:init(controlledPlayer, otherPlayer)
     self.mustUpdatePath = false
     self.currentItemTarget = nil
     self.goingToPlayer = false
+
+    self.canGoToPlayer = false
 end
 
 function AIContext:update()
@@ -26,7 +28,9 @@ function AIContext:update()
     self.lastDirection = self.controlledPlayer.lastDirection
     self.controlledPlayerNode = AStarNode(self:playerTileCoord())
 
-    self.isCurrentCaseSafe = map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j) <= 1
+    self.isCurrentCaseSafe = map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j) <= 14
+
+
 
     self.timeToUpdate += 1
 end
@@ -52,8 +56,9 @@ class('StateMachine').extends()
 
 local frameToUpdatePath = 20
 
-function StateMachine:init()
+function StateMachine:init(AI)
     self.state = "IDLE"
+    self.AI = AI
 end
 
 function StateMachine:update(context)
@@ -100,23 +105,30 @@ function StateMachine:updateState(context)
 
         return
     end
+
+    if self.state == "BREAKBLOCK" then
+        if map:nextToBreakable(context.controlledPlayerNode.i, context.controlledPlayerNode.j) then
+            context.controlledPlayer:dropBomb()
+        end
+    end
 end
 
 function StateMachine:getNewTarget(context)
     if self.state == "DODGE" then
-        context.goingToPlayer = false
 
-        local newTarget = AStarNode(map:searchFirstSafeCase(context.controlledPlayerNode.i,context.controlledPlayerNode.j))
+        local newTarget = AStarNode(map:searchFirstSafeCase(context.controlledPlayerNode.i,context.controlledPlayerNode.j, self.AI))
         return newTarget ~= context.targetNode, newTarget
     end
 
     if self.state == "GOTOITEM" then
-        context.goingToPlayer = false
-
         local rndm = math.ceil(math.random() * #map.freeItems)
         local randomItem = map.freeItems[rndm]
         context.currentItemTarget = randomItem
         return true, AStarNode(randomItem.i, randomItem.j)
+    end
+
+    if self.state == "RECHARGING" then
+        return true, AStarNode(context.controlledPlayerNode.i, context.controlledPlayerNode.j)
     end
 
     if self.state == "GOTOPLAYER" then
@@ -125,7 +137,8 @@ function StateMachine:getNewTarget(context)
 
     if self.state == "BREAKBLOCK" then
         local success, bricI, bricJ = gameScene:randomBric()
-        return success, AStarNode(bricI, bricJ)
+        local i, j = gameScene:neighbour(bricI, bricJ)
+        return success, AStarNode(i, j)
     end
 
     return false, context.targetNode
@@ -137,12 +150,23 @@ function StateMachine:getState(context)
     end
 
     if #map.freeItems > 0 then
-        return "GOTOITEM"
+        local rndm = math.ceil(math.random() * #map.freeItems)
+        local randomItem = map.freeItems[rndm]
+        context.currentItemTarget = randomItem
+        local success, path = self.AI:pathToNode(AStarNode(randomItem.i, randomItem.j))
+
+        if success then
+            return "GOTOITEM"
+        end
+    end
+
+    if context.isCurrentCaseSafe and context.controlledPlayer:hasBombInReserve() == false then
+        return "RECHARGING"
     end
 
     local distToPlayer = getNodeManhattanDistance(context.otherPlayer:node(), context.controlledPlayerNode)
 
-    if distToPlayer <  10 then
+    if distToPlayer <  10 and context.canGoToPlayer then
         return "GOTOPLAYER"
     end
 

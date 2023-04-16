@@ -131,6 +131,7 @@ function Bomb:explode()
 
     self.player:removeBomb(self)
     map:removeExplosionGroup(self.i, self.j)
+    map:checkAIPlayerPath()
     self:remove()
 end
 

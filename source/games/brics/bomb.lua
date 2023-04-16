@@ -155,9 +155,14 @@ function Bomb:tryPoseExplosion(canPose, i, j, iDir, jDir, endAnim)
     end
 
     local anim = explosionAnim.cross
+    local hasTypeInCoordinates = gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Block)
 
     -- Fin a la case d'après
-    if endAnim or gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Block) then
+    if endAnim or hasTypeInCoordinates then
+        local hasBomb, bomb = gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Bomb)
+        if hasTypeInCoordinates and hasBomb then
+            bomb:explode()
+        end
         anim = self:endExplosion(iDir, jDir)
     else
         -- Sinon

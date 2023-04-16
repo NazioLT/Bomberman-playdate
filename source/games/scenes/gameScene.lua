@@ -101,6 +101,13 @@ function GameScene:update()
     end
 end
 
+function GameScene:exit()
+    GameScene.super.exit(self)
+    sequence = Sequence.new():from(180):to(0, 0.25, Ease.inOutCubic)
+    if sequence then sequence:start() end
+    self.backgroundMusic:stop()
+end
+
 -- Shortcuts methods --
 
 function GameScene:randomBric()

@@ -248,6 +248,7 @@ function Player:kill()
     self.dead = true
 
     self.states.Die.onAnimationEndEvent = function(self)
+        Noble.transition(self == player1 and LoseScene or WinScene, 0.5, Noble.TransitionType.SLIDE_OFF_LEFT)
         self:remove()
     end
 end

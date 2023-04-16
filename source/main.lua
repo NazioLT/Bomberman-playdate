@@ -10,6 +10,8 @@ import "games/library.lua"
 import "games/scenes/simpleScene.lua"
 import "games/scenes/gameScene.lua"
 import "games/scenes/astarScene.lua"
+import "games/scenes/winScene.lua"
+import "games/scenes/loseScene.lua"
 
 import "games/feedbacks/invertedCircle.lua"
 import "games/feedbacks/shaker.lua"

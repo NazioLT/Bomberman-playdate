@@ -27,3 +27,34 @@ end
 function maskContainsGroup(mask, group)
     return hasbit(mask, bit(group))
 end
+
+function EmptyTable(iDim)
+    local table = { }
+
+    for i = 1, iDim, 1 do
+        table[i] = {}
+    end
+
+    return table
+end
+
+function EmptyDoubleTable(iDim, jDim)
+    local table = { }
+
+    for i = 1, iDim, 1 do
+        table[i] = {}
+        for j = 1, jDim, 1 do
+            table[i][j] = {}
+        end
+    end
+
+    return table
+end
+
+function getRect(x1, y1, x2, y2)
+    local x = math.min(x1, x2)
+    local y = math.min(y1, y2)
+    local w = math.abs(x1 - x2)
+    local h = math.abs(y1 - y2)
+    return playdate.geometry.rect.new(x, y, w, h)
+end

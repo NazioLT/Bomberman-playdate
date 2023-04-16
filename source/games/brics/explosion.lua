@@ -22,6 +22,8 @@ function Explosion:init(i, j, animationShift)
 
     self:setCollidesWithGroups({ collisionGroup.p1, collisionGroup.p2 })
 
+    map:addDanger(i, j, 1000)
+
     local animationTickStep = 3
 
     self:addState('Explosion', 1, 4, {
@@ -34,6 +36,7 @@ function Explosion:init(i, j, animationShift)
     self:playAnimation()
 
     self.states.Explosion.onAnimationEndEvent = function(self)
+        map:removeDanger(i, j, 1000)
         self:remove()
     end
 

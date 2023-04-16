@@ -13,6 +13,7 @@ function SimpleScene:init()
 
     menu:addItem('Ⓐ Start Game', function()
         Noble.transition(GameScene, 0.5, Noble.TransitionType.SLIDE_OFF_LEFT)
+        -- Noble.transition(AStarScene, 0.5, Noble.TransitionType.SLIDE_OFF_LEFT)
     end)
 
     SimpleScene.inputHandler = {

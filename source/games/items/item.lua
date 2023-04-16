@@ -9,10 +9,11 @@ function Item:init(i, j, imageID)
 end
 
 function Item:createCollider()
-    self:setCollideRect(6, 6, 4, 4)
+    self:setCollideRect(4, 4, 8, 8)
 end
 
 function Item:pick(player)
     print("Pick Item")
+    map:pickItem(self)
     self:remove()
 end

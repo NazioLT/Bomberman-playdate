@@ -1,4 +1,8 @@
 function hasTypeInTable(table, type)
+    if table == nil or #table == 0 then
+        return false, nil
+    end
+
     for _, value in pairs(table) do
         if value:isa(type) then
             return true, value

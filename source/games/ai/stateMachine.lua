@@ -28,7 +28,8 @@ function AIContext:update()
     self.lastDirection = self.controlledPlayer.lastDirection
     self.controlledPlayerNode = AStarNode(self:playerTileCoord())
 
-    self.isCurrentCaseSafe = map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j) <= 14
+    print(map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j))
+    self.isCurrentCaseSafe = map:getDanger(self.controlledPlayerNode.i, self.controlledPlayerNode.j) <= 14 
 
 
 

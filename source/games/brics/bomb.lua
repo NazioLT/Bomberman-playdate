@@ -8,7 +8,7 @@ function Bomb:init(i, j, player)
     Bomb.super.init(self, i, j, 5, true)
 
     self.player = player
-    self.explosions = { }
+    self.explosions = {}
 
     self.explosionRange = player.explosionRange
 
@@ -31,6 +31,8 @@ function Bomb:init(i, j, player)
 
     -- PLACING BOMB EXPLOSION ON MAP
 
+    local gameTile = gameScene.tiles[i] [j]
+    gameTile[#gameTile+1] = self
     map:addExplosionGroup(i, j)
     -- print("Bomb " .. i .. "" .. j)
     for n = -self.explosionRange, self.explosionRange, 1 do
@@ -109,6 +111,7 @@ function Bomb:explode()
 
     print("Explode " .. self.i .. " : " .. self.j)
     self.explodeSound:play(1, 1)
+    gameScene:remove(self.i, self.j, self)
 
     local screenShaker = ScreenShaker()
     screenShaker:start(0.8, 3, playdate.easingFunctions.inOutCubic)
@@ -134,13 +137,17 @@ function Bomb:explode()
     end
 
     self.player:removeBomb(self)
-    map:removeExplosionGroup(self.i, self.j)
     map:checkAIPlayerPath()
     self:remove()
 end
 
 function Bomb:tryPoseExplosion(canPose, i, j, iDir, jDir, endAnim)
     local breakableBlock = false
+
+    local hasBombAt, bomb = gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Bomb)
+    if hasBombAt then
+        bomb:explode()
+    end
 
     -- Si peut poser, regarde si peu poser le suivant
     if canPose then
@@ -150,19 +157,17 @@ function Bomb:tryPoseExplosion(canPose, i, j, iDir, jDir, endAnim)
         end
     end
 
+    local hasTypeInCoordinates = gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Block)
+
     if canPose == false then
         return false
     end
 
     local anim = explosionAnim.cross
-    local hasTypeInCoordinates = gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Block)
+
 
     -- Fin a la case d'après
     if endAnim or hasTypeInCoordinates then
-        local hasBomb, bomb = gameScene:hasTypeAtCoordinates(i + iDir, j + jDir, Bomb)
-        if hasTypeInCoordinates and hasBomb then
-            bomb:explode()
-        end
         anim = self:endExplosion(iDir, jDir)
     else
         -- Sinon

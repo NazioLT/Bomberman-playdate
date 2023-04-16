@@ -55,6 +55,9 @@ function Map:removeDanger(i, j, danger)
         return
     end
     self.explosionsTiles[i][j] -= danger
+    if self.explosionsTiles[i][j] < 0 then
+        self.explosionsTiles[i][j] = 0
+    end
 end
 
 function Map:hasBombAt(i, j)
@@ -77,7 +80,7 @@ function Map:searchFirstSafeCase(i, j, AI)
                 local cI, cJ = i + x, j + y
 
                 if self:isInMap(cI, cJ) then
-                    if self:getDanger(cI, cJ) < 5 and isWalkable(self.tiles[cI][cJ]) then
+                    if self:getDanger(cI, cJ) == 0 and isWalkable(self.tiles[cI][cJ]) then
                         local succes, path = AI:pathTo(cI, cJ)
 
                         if succes then
@@ -97,7 +100,7 @@ function Map:searchFirstSafeCase(i, j, AI)
                 local cI, cJ = i + x, j + y
 
                 if self:isInMap(cI, cJ) then
-                    if self:getDanger(cI, cJ) < 30 and isWalkable(self.tiles[cI][cJ]) then
+                    if self:getDanger(cI, cJ) < 15 and isWalkable(self.tiles[cI][cJ]) then
                         local succes, path = AI:pathTo(cI, cJ)
 
                         if succes then

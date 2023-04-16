@@ -25,7 +25,7 @@ function Player:init(i, j, player)
     local tickSpeed = 10
 
     -- Colliders
-    self:setCollideRect(12, 20, 8, 8)
+    self:setCollideRect(11, 19, 10, 10)
 
     local playerCollisionGroup = player == P1 and collisionGroup.p1 or collisionGroup.p2
     self:setGroups(playerCollisionGroup)

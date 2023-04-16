@@ -71,7 +71,7 @@ function GameScene:enter()
 
     map = Map(self.tiles)
 
-    aiBehaviour = AIBehaviour(player2, AStar(map))
+    -- aiBehaviour = AIBehaviour(player2, AStar(map))
 
     -- Sounds
     local sound = playdate.sound.sampleplayer
@@ -91,7 +91,10 @@ end
 function GameScene:update()
     GameScene.super.update(self)
 
-    aiBehaviour:updateBehaviour()
+    if aiBehaviour ~= nil then
+        aiBehaviour:updateBehaviour()
+    end
+    
 
     -- Update Walkable array
     for i = 1, 15, 1 do
@@ -297,6 +300,9 @@ function GameScene:hasItem(i, j) --Return if is walkable and breakableblock
 end
 
 function GameScene:hasTypeAtCoordinates(i, j, type)
+    if i <= 0 or j <= 0 or i > 15 or j > 15 then
+        return false, nil
+    end
     local caseTable = self.tiles[i][j]
     return hasTypeInTable(caseTable, type)
 end
